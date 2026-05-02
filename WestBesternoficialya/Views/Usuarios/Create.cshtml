@@ -1,0 +1,45 @@
+﻿@model WestBesternoficialya.Models.Usuario
+
+@{
+    ViewData["Title"] = "Nuevo Empleado";
+}
+
+<div class="container mt-4">
+    <h2>Registrar Nuevo Empleado</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post">
+                
+                <div class="mb-3">
+                    <label class="form-label">Nombre Completo</label>
+                    <input asp-for="NombreCompleto" class="form-control" placeholder="Ej. Juan Pérez" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Correo Electrónico</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="juan@hotel.com" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <!-- Type password oculta las letras con puntitos -->
+                    <input asp-for="Password" type="password" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Departamento asignado</label>
+                    <!-- Este es nuestro menú desplegable. Se llena solito con la "charola" ViewBag -->
+                    <select asp-for="DepartamentoId" class="form-control" asp-items="ViewBag.Departamentos">
+                        <option value="">-- Selecciona un Departamento --</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success">Guardar Empleado</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            
+            </form>
+        </div>
+    </div>
+</div>

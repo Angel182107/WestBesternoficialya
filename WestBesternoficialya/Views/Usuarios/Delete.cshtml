@@ -1,0 +1,17 @@
+﻿@model WestBesternoficialya.Models.Usuario
+
+<div class="container mt-4">
+    <h2 class="text-danger">¿Despedir empleado?</h2>
+    <hr />
+    <div>
+        <h4>@Model.NombreCompleto</h4>
+        <p>Departamento: <strong>@Model.Departamento.Nombre</strong></p>
+        <p>Esta acción borrará al usuario del sistema y no se puede deshacer.</p>
+        
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Sí, dar de baja</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
