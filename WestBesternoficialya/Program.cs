@@ -1,4 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+// OJO: Si le pusiste otro nombre a tu proyecto, cambia "HotelSanPedroWeb" por tu nombre exacto
+using WestBesternoficialya;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// --- 1. NUESTRO CÓDIGO PARA MYSQL EMPIEZA AQUÍ ---
+// Leemos las "llaves" desde tu archivo appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Le decimos al preparador que agregue la base de datos a sus herramientas
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+// --- NUESTRO CÓDIGO TERMINA AQUÍ ---
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -15,15 +28,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();
