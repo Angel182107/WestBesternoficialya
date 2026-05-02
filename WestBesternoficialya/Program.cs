@@ -4,36 +4,36 @@ using WestBesternoficialya.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 1. NUESTRO CÓDIGO PARA MYSQL EMPIEZA AQUÍ ---
-// Leemos las "llaves" desde tu archivo appsettings.json
+// 🔗 Cadena de conexión (de appsettings.json)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// Le decimos al preparador que agregue la base de datos a sus herramientas
+// 🗄️ Registro del DbContext con MySQL (Pomelo)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-// --- NUESTRO CÓDIGO TERMINA AQUÍ ---
 
-// Add services to the container.
+// 🎮 Servicios MVC
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 🚨 Manejo de errores (producción)
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
+// 🔐 Middleware básico
 app.UseHttpsRedirection();
-app.UseRouting();
-app.UseAuthorization();
-app.MapStaticAssets();
+app.UseStaticFiles();
 
+app.UseRouting();
+
+app.UseAuthorization();
+
+// 🧭 Ruta por defecto MVC
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
