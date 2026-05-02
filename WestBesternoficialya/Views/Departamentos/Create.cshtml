@@ -10,13 +10,18 @@
 
     <div class="row">
         <div class="col-md-6">
+            <!-- Aquí empieza nuestro formulario -->
             <form asp-action="Create" method="post">
+                
                 <div class="mb-3">
                     <label class="form-label">Nombre del Departamento</label>
+                    <!-- Este input se conecta automáticamente con la propiedad 'Nombre' de tu clase -->
                     <input asp-for="Nombre" class="form-control" placeholder="Ej. Administración, Ama de llaves..." />
                 </div>
+
                 <button type="submit" class="btn btn-success">Guardar Departamento</button>
                 <a asp-action="Index" class="btn btn-secondary">Cancelar y volver a la lista</a>
+            
             </form>
         </div>
     </div>

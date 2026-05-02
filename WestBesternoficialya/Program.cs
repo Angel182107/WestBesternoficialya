@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-// OJO: Si le pusiste otro nombre a tu proyecto, cambia "HotelSanPedroWeb" por tu nombre exacto
 using WestBesternoficialya.Models;
 
 var builder = WebApplication.CreateBuilder(args);

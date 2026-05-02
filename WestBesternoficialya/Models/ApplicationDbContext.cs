@@ -1,4 +1,4 @@
-﻿using WestBesternoficialya.Models; // Asegúrate de tener tus clases en la carpeta Models
+﻿using WestBesternoficialya.Models;
 using Microsoft.EntityFrameworkCore;
 
 public class ApplicationDbContext : DbContext
