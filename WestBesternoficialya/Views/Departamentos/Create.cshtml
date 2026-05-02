@@ -1,0 +1,23 @@
+﻿@model WestBesternoficialya.Models.Departamento
+
+@{
+    ViewData["Title"] = "Nuevo Departamento";
+}
+
+<div class="container mt-4">
+    <h2>Agregar Nuevo Departamento</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Nombre del Departamento</label>
+                    <input asp-for="Nombre" class="form-control" placeholder="Ej. Administración, Ama de llaves..." />
+                </div>
+                <button type="submit" class="btn btn-success">Guardar Departamento</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar y volver a la lista</a>
+            </form>
+        </div>
+    </div>
+</div>
