@@ -1,5 +1,4 @@
-﻿<!-- En esta primera línea le decimos a la vista qué tipo de datos va a recibir del Controlador -->
-@model IEnumerable<WestBesternoficialya.Models.Departamento>
+﻿@model IEnumerable<WestBesternoficialya.Models.Departamento>
 
 @{
     ViewData["Title"] = "Departamentos";
@@ -7,23 +6,31 @@
 
 <div class="container mt-4">
     <h2>Catálogo de Departamentos</h2>
+    
+    <a asp-action="Create" class="btn btn-primary mb-3">Agregar Nuevo Departamento</a>
+    
     <hr />
 
-    <!-- Usamos clases de Bootstrap 5 para que la tabla se vea moderna y responsiva -->
     <table class="table table-striped table-hover mt-3">
         <thead class="table-dark">
             <tr>
-                <th>ID</th>
+                <!-- Quitamos el <th> del ID de aquí arriba -->
                 <th>Nombre del Departamento</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Aquí hacemos un ciclo para imprimir cada departamento que llegó de la base de datos -->
             @foreach (var depto in Model)
             {
                 <tr>
-                    <td>@depto.Id</td>
+                    <!-- Quitamos el <td> del ID de aquí adentro -->
                     <td>@depto.Nombre</td>
+                    <td>
+                        <!-- Fíjate que el ID sigue aquí adentro de los botones (asp-route-id),
+                             así el sistema sabe cuál borrar, pero el usuario ya no lo ve escrito en la tabla -->
+                        <a asp-action="Edit" asp-route-id="@depto.Id" class="btn btn-warning btn-sm">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@depto.Id" class="btn btn-danger btn-sm">Borrar</a>
+                    </td>
                 </tr>
             }
         </tbody>

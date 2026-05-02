@@ -1,0 +1,21 @@
+﻿@model WestBesternoficialya.Models.Departamento
+
+<div class="container mt-4">
+    <h2>Editar Departamento</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post">
+                <!-- Súper importante: Ocultamos el ID para que el sistema sepa a quién está editando -->
+                <input type="hidden" asp-for="Id" />
+                
+                <div class="mb-3">
+                    <label class="form-label">Nombre del Departamento</label>
+                    <input asp-for="Nombre" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

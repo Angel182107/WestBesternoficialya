@@ -1,0 +1,16 @@
+﻿@model WestBesternoficialya.Models.Departamento
+
+<div class="container mt-4">
+    <h2 class="text-danger">¿Estás seguro de que quieres borrar esto?</h2>
+    <hr />
+    <div>
+        <h4>Departamento: @Model.Nombre</h4>
+        <p>Esta acción no se puede deshacer.</p>
+        
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Sí, Borrar definitivamente</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
