@@ -14,12 +14,16 @@
             <tr>
                 <th>Nombre del Producto</th>
                 <th>Cantidad Actual</th>
-                <th>Stock Mínimo Permitido</th>
+                <th>Stock Mínimo</th>
+                <th>Stock Máximo</th>
+                <th>Ubicación / Depto</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var producto in Model)
             {
+                // Alerta visual si queda poco producto
                 var claseAlerta = "";
                 if (producto.CantidadActual <= producto.StockMinimo)
                 {
@@ -30,6 +34,12 @@
                     <td>@producto.Nombre</td>
                     <td>@producto.CantidadActual</td>
                     <td>@producto.StockMinimo</td>
+                    <td>@producto.StockMaximo</td>
+                    <td>@producto.Departamento?.Nombre</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@producto.Id" class="btn btn-warning btn-sm">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@producto.Id" class="btn btn-danger btn-sm">Borrar</a>
+                    </td>
                 </tr>
             }
         </tbody>

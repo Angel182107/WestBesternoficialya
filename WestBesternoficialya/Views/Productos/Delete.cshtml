@@ -1,0 +1,18 @@
+﻿@model WestBesternoficialya.Models.Producto
+
+<div class="container mt-4">
+    <h2 class="text-danger">¿Eliminar este producto del inventario?</h2>
+    <hr />
+    <div>
+        <h4>Producto: <strong>@Model.Nombre</strong></h4>
+        <p>Cantidad en stock: @Model.CantidadActual unidades.</p>
+        <p>Resguardado por: @Model.Departamento?.Nombre</p>
+        <p class="text-muted">Esta acción no se puede deshacer.</p>
+        
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Sí, eliminar definitivamente</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>

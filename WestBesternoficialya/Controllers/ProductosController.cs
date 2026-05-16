@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering; // <-- Asegúrate de tener esta línea arriba para el ViewBag
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WestBesternoficialya.Data;
 using WestBesternoficialya.Models;
@@ -15,25 +15,24 @@ public class ProductosController : Controller
         _context = context;
     }
 
+    // --- PANTALLA PRINCIPAL ---
     public async Task<IActionResult> Index()
     {
-        var productos = await _context.Inventario.ToListAsync();
+        // .Include hace que podamos ver el nombre del departamento en la tabla
+        var productos = await _context.Inventario.Include(p => p.Departamento).ToListAsync();
         return View(productos);
     }
 
-    // --- EL VIAJE DE IDA (GET): Formulario en blanco ---
+    // --- CREAR ---
     public IActionResult Create()
     {
-        // Llevamos la charola con los departamentos
         ViewBag.Departamentos = new SelectList(_context.Departamentos, "Id", "Nombre");
         return View();
     }
 
-    // --- EL VIAJE DE VUELTA (POST): Guardar el producto ---
     [HttpPost]
     public async Task<IActionResult> Create(Producto producto)
     {
-        // ¡Magia! Le decimos al inspector que se relaje y no pida el objeto Departamento completo
         ModelState.Remove("Departamento");
 
         if (ModelState.IsValid)
@@ -43,8 +42,70 @@ public class ProductosController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        // Si hay un error, recargamos la charola para que el menú no se rompa
         ViewBag.Departamentos = new SelectList(_context.Departamentos, "Id", "Nombre", producto.DepartamentoId);
         return View(producto);
+    }
+
+    // ==========================================
+    // NUEVA SECCIÓN: EDITAR (ACTUALIZAR)
+    // ==========================================
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var producto = await _context.Inventario.FindAsync(id);
+        if (producto == null) return NotFound();
+
+        // Llevamos los departamentos en la charola para el menú desplegable
+        ViewBag.Departamentos = new SelectList(_context.Departamentos, "Id", "Nombre", producto.DepartamentoId);
+        return View(producto);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(int id, Producto producto)
+    {
+        if (id != producto.Id) return NotFound();
+
+        // Volvemos a calmar al inspector
+        ModelState.Remove("Departamento");
+
+        if (ModelState.IsValid)
+        {
+            _context.Update(producto);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        ViewBag.Departamentos = new SelectList(_context.Departamentos, "Id", "Nombre", producto.DepartamentoId);
+        return View(producto);
+    }
+
+    // ==========================================
+    // NUEVA SECCIÓN: ELIMINAR (BORRAR)
+    // ==========================================
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null) return NotFound();
+
+        // Traemos el producto y su departamento para mostrarlo antes de borrar
+        var producto = await _context.Inventario
+            .Include(p => p.Departamento)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (producto == null) return NotFound();
+
+        return View(producto);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var producto = await _context.Inventario.FindAsync(id);
+        if (producto != null)
+        {
+            _context.Inventario.Remove(producto);
+            await _context.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
     }
 }
