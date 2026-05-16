@@ -1,0 +1,44 @@
+﻿@model WestBesternoficialya.Models.Producto
+
+<div class="container mt-4">
+    <h2>Registrar Nuevo Producto</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post">
+                
+                <div class="mb-3">
+                    <label class="form-label">Nombre del Producto</label>
+                    <input asp-for="Nombre" class="form-control" placeholder="Ej. Kleenex, Jabón, Toallas..." />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cantidad Actual</label>
+                    <input asp-for="CantidadActual" type="number" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Stock Mínimo (Alerta)</label>
+                    <input asp-for="StockMinimo" type="number" class="form-control" placeholder="¿A los cuántos avisamos?" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Stock Máximo</label>
+                    <input asp-for="StockMaximo" type="number" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Departamento que lo resguarda</label>
+                    <select asp-for="DepartamentoId" class="form-control" asp-items="ViewBag.Departamentos">
+                        <option value="">-- Selecciona un Departamento --</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success">Guardar Producto</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            
+            </form>
+        </div>
+    </div>
+</div>

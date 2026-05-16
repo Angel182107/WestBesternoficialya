@@ -3,39 +3,30 @@ using Microsoft.EntityFrameworkCore;
 using WestBesternoficialya.Data;
 using WestBesternoficialya.Models;
 
-namespace WestBesternoficialya.Controllers; // Corregido al nombre real de tu proyecto
+namespace WestBesternoficialya.Controllers;
 
 public class DepartamentosController : Controller
 {
-    // Aquí guardamos la conexión a la base de datos
     private readonly ApplicationDbContext _context;
 
-    // Cuando el Controlador "nace", le entregamos las llaves de la base de datos
     public DepartamentosController(ApplicationDbContext context)
     {
         _context = context;
     }
 
-    // Esta es la acción principal (la página que carga por defecto)
     public async Task<IActionResult> Index()
     {
-        // El mesero va a la cocina (BD), toma todos los departamentos y los guarda en una lista
         var departamentos = await _context.Departamentos.ToListAsync();
 
-        // El mesero le entrega esa lista a la Vista (Pantalla)
         return View(departamentos);
     }
 
-    // --- 1. EL VIAJE DE IDA (GET) ---
-    // Solo muestra la pantalla con el formulario vacío ("el papel en blanco")
     public IActionResult Create()
     {
         return View();
     }
 
-    // --- 2. EL VIAJE DE VUELTA (POST) ---
-    // Recibe los datos del formulario y los guarda en la Base de Datos
-    [HttpPost] // Le dice al sistema que aquí llegan datos desde un botón de Guardar
+    [HttpPost]
     public async Task<IActionResult> Create(Departamento departamento)
     {
         // Verificamos que los datos que escribió el usuario sean correctos
