@@ -1,0 +1,32 @@
+﻿@model WestBesternoficialya.Models.Evento
+
+<div class="container mt-4">
+    <h2>Firma Electrónica de Enterado</h2>
+    <hr />
+
+    <div class="alert alert-info">
+        <h4 class="alert-heading">Aviso: @Model.Titulo</h4>
+        <p>@Model.DetallesLogistica</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="GuardarFirma" method="post">
+                
+                <input type="hidden" name="eventoId" value="@Model.Id" />
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">¿Quién está firmando de enterado?</label>
+                    <select name="usuarioId" class="form-control" asp-items="ViewBag.Usuarios">
+                        <option value="">-- Selecciona tu nombre --</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-pen"></i> Firmar y registrar hora
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

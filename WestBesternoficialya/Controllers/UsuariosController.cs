@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WestBesternoficialya.Data;
 using WestBesternoficialya.Models;
+using Microsoft.AspNetCore.Authorization; // <-- No olvides esta línea hasta arriba de todo el archivo
 
 namespace WestBesternoficialya.Controllers;
 
+[Authorize] // <-- ¡ESTE ES EL CANDADO! Nadie entra sin gafete.
 public class UsuariosController : Controller
 {
+    // ... el resto de tu código ...
     private readonly ApplicationDbContext _context;
 
     public UsuariosController(ApplicationDbContext context)

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<WestBesternoficialya.Models.AcuseRecibo>
+
+<div class="container mt-4">
+    <h2>Reporte de Lectura</h2>
+    <h4 class="text-muted">Aviso: @ViewBag.TituloEvento</h4>
+    <hr />
+
+    <table class="table table-striped mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre del Empleado</th>
+                <th>Fecha y Hora Exacta de la Firma</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="2" class="text-center text-muted py-4">
+                        <em>Nadie ha firmado de enterado este aviso todavía.</em>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var firma in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">@firma.Usuario.NombreCompleto</td>
+                        <td>@firma.FechaHoraFirma.ToString("dd/MM/yyyy hh:mm tt")</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="Index" class="btn btn-secondary mt-3">Volver al Tablero de Anuncios</a>
+</div>

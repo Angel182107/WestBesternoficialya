@@ -1,0 +1,19 @@
+﻿@model WestBesternoficialya.Models.Evento
+
+<div class="container mt-4">
+    <h2 class="text-danger">¿Quitar este aviso del tablero?</h2>
+    <hr />
+    <div class="card border-danger mb-3" style="max-width: 30rem;">
+        <div class="card-header bg-danger text-white">Aviso: @Model.Titulo</div>
+        <div class="card-body">
+            <p><strong>Detalles:</strong> @Model.DetallesLogistica</p>
+            <p><strong>Fecha:</strong> @Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
+            <p class="text-muted small">Al borrar este evento, desaparecerá del tablero de todos los empleados.</p>
+        </div>
+    </div>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Sí, eliminar aviso</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

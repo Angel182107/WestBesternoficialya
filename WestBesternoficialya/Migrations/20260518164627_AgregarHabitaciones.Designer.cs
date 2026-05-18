@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WestBesternoficialya.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260518164627_AgregarHabitaciones")]
+    partial class AgregarHabitaciones
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,45 +184,6 @@ namespace WestBesternoficialya.Migrations
                     b.ToTable("Inventario");
                 });
 
-            modelBuilder.Entity("WestBesternoficialya.Models.Reservacion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("EstadoReserva")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("FechaEntrada")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("FechaSalida")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("HabitacionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NombreCliente")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Telefono")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("TotalCobrar")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HabitacionId");
-
-                    b.ToTable("Reservaciones");
-                });
-
             modelBuilder.Entity("WestBesternoficialya.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -289,17 +253,6 @@ namespace WestBesternoficialya.Migrations
                         .IsRequired();
 
                     b.Navigation("Departamento");
-                });
-
-            modelBuilder.Entity("WestBesternoficialya.Models.Reservacion", b =>
-                {
-                    b.HasOne("WestBesternoficialya.Models.Habitacion", "Habitacion")
-                        .WithMany()
-                        .HasForeignKey("HabitacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Habitacion");
                 });
 
             modelBuilder.Entity("WestBesternoficialya.Models.Usuario", b =>

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<WestBesternoficialya.Models.Evento>
+
+<div class="container mt-4">
+    <h2>Tablero de Anuncios y Eventos</h2>
+    <a asp-action="Create" class="btn btn-primary mb-3">Publicar Nuevo Aviso</a>
+    <hr />
+
+    <div class="row">
+        @foreach (var evento in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white fw-bold">
+                        Aviso Importante
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@evento.Titulo</h5>
+                        <p class="card-text">@evento.DetallesLogistica</p>
+                        <p class="text-muted small">Fecha: @evento.FechaCreacion.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div class="card-footer bg-transparent text-center">
+                            <a asp-action="Firmar" asp-route-id="@evento.Id" class="btn btn-success btn-sm mb-1">Marcar de Enterado</a>
+                        
+                            <a asp-action="ReporteFirmas" asp-route-id="@evento.Id" class="btn btn-info btn-sm mb-1 text-white">Ver Firmas</a>
+                        
+                            <a asp-action="Edit" asp-route-id="@evento.Id" class="btn btn-warning btn-sm mb-1">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@evento.Id" class="btn btn-danger btn-sm mb-1">Borrar</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

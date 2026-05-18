@@ -1,32 +1,48 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using WestBesternoficialya.Models;
+using Microsoft.AspNetCore.Authorization;
 
-namespace WestBesternoficialya.Controllers
+namespace WestBesternoficialya.Controllers;
+
+[Authorize] // <-- ¡ESTE ES EL CANDADO! Nadie entra sin gafete.
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    // ... el resto de tu código ...
+    private readonly ApplicationDbContext _context;
+
+    // Le damos al Gerente (Controlador) las llaves de la base de datos
+    public HomeController(ApplicationDbContext context)
     {
-        private readonly ILogger<HomeController> _logger;
+        _context = context;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+    public async Task<IActionResult> Index()
+    {
+        // 1. Va y cuenta cuántas habitaciones están marcadas como "Sucia"
+        int habitacionesSucias = await _context.Habitaciones.CountAsync(h => h.Estado == "Sucia");
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        // 2. Va y cuenta cuántos productos están en alerta roja (Cantidad <= Stock Minimo)
+        int alertasAlmacen = await _context.Inventario.CountAsync(p => p.CantidadActual <= p.StockMinimo);
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        // 3. Cuenta cuántos empleados tenemos en total
+        int totalEmpleados = await _context.Usuarios.CountAsync();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        // 4. Cuenta cuántos anuncios hay en el tablero
+        int totalEventos = await _context.Eventos.CountAsync();
+
+        // Ponemos los números en la "charola" (ViewBag) para mandarlos a la pantalla
+        ViewBag.HabitacionesSucias = habitacionesSucias;
+        ViewBag.AlertasAlmacen = alertasAlmacen;
+        ViewBag.TotalEmpleados = totalEmpleados;
+        ViewBag.TotalEventos = totalEventos;
+
+        return View();
+    }
+
+    // Dejamos la página de privacidad por si la necesitas después
+    public IActionResult Privacy()
+    {
+        return View();
     }
 }

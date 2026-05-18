@@ -1,0 +1,31 @@
+﻿@model WestBesternoficialya.Models.Evento
+
+<div class="container mt-4">
+    <h2>Editar Aviso</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                
+                <div class="mb-3">
+                    <label class="form-label">Título del Evento o Aviso</label>
+                    <input asp-for="Titulo" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Descripción</label>
+                    <textarea asp-for="DetallesLogistica" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Fecha del Evento</label>
+                    <input asp-for="FechaCreacion" type="date" class="form-control" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

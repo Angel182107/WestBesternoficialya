@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
         public string Numero { get; set; }
-        public string Estado { get; set; } // "Disponible", "Sucia", "En Limpieza"
+        public string Tipo { get; set; }
+        public string Estado { get; set; }
+        public decimal Precio { get; set; }
     }
 }
