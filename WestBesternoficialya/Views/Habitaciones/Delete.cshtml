@@ -1,0 +1,19 @@
+﻿@model WestBesternoficialya.Models.Habitacion
+
+<div class="container mt-4">
+    <h2 class="text-danger">¿Dar de baja esta habitación?</h2>
+    <hr />
+    <div class="card border-danger mb-3" style="max-width: 25rem;">
+        <div class="card-header bg-danger text-white">Habitación @Model.Numero</div>
+        <div class="card-body">
+            <p>Tipo: @Model.Tipo</p>
+            <p>Estado actual: <strong>@Model.Estado</strong></p>
+            <p class="text-muted">Esta acción la removerá permanentemente del mapa del hotel.</p>
+        </div>
+    </div>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Confirmar Baja</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

@@ -1,0 +1,28 @@
+﻿@model WestBesternoficialya.Models.Reservacion
+
+<div class="container mt-4">
+    <h2 class="text-danger">¿Borrar este registro del historial?</h2>
+    <hr />
+    
+    <div class="card border-danger mb-3" style="max-width: 30rem;">
+        <div class="card-header bg-danger text-white fw-bold">
+            Huésped: @Model.NombreCliente
+        </div>
+        <div class="card-body">
+            <p><strong>Teléfono:</strong> @Model.Telefono</p>
+            <p><strong>Habitación:</strong> Cuarto @Model.Habitacion?.Numero</p>
+            <p><strong>Estado:</strong> @Model.EstadoReserva</p>
+            <p><strong>Total Cobrado:</strong> $@Model.TotalCobrar.ToString("0.00")</p>
+            
+            <div class="alert alert-warning mt-3 mb-0">
+                <small><i class="bi bi-exclamation-triangle"></i> Esta acción borrará el registro de la base de datos para siempre.</small>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger shadow-sm">Sí, borrar definitivamente</button>
+        <a asp-action="Index" class="btn btn-secondary shadow-sm">Cancelar</a>
+    </form>
+</div>

@@ -1,0 +1,38 @@
+﻿@model WestBesternoficialya.Models.Habitacion
+
+<div class="container mt-4">
+    <h2>Registrar Nueva Habitación</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Número de Habitación</label>
+                    <input asp-for="Numero" class="form-control" placeholder="Ej. 101, 102, 201..." />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tipo de Habitación</label>
+                    <select asp-for="Tipo" class="form-control">
+                        <option value="Sencilla">Sencilla</option>
+                        <option value="Doble">Doble</option>
+                        <option value="Suite">Suite Principal</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Estado Inicial</label>
+                    <select asp-for="Estado" class="form-control">
+                        <option value="Limpia">Limpia (Disponible)</option>
+                        <option value="Sucia">Sucia (Requiere Limpieza)</option>
+                        <option value="Mantenimiento">En Mantenimiento</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Precio por Noche</label>
+                    <input asp-for="Precio" type="number" class="form-control" placeholder="Ej. 1200" />
+                </div>
+                <button type="submit" class="btn btn-success">Guardar Habitación</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

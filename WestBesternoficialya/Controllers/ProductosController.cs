@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WestBesternoficialya.Data;
 using WestBesternoficialya.Models;
+using Microsoft.AspNetCore.Authorization; 
 
 namespace WestBesternoficialya.Controllers;
 
+[Authorize] 
 public class ProductosController : Controller
 {
+    // ... el resto de tu código ...
     private readonly ApplicationDbContext _context;
 
     public ProductosController(ApplicationDbContext context)

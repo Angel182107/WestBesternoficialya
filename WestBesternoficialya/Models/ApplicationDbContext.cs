@@ -14,4 +14,5 @@ public class ApplicationDbContext : DbContext
     public DbSet<Habitacion> Habitaciones { get; set; }
     public DbSet<Incidencia> Incidencias { get; set; }
     public DbSet<Producto> Inventario { get; set; }
+    public DbSet<Reservacion> Reservaciones { get; set; }
 }

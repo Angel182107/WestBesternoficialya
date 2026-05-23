@@ -1,0 +1,43 @@
+﻿@model WestBesternoficialya.Models.Reservacion
+
+<div class="container mt-4">
+    <h2>Registrar Nueva Reservación</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post">
+                
+                <div class="mb-3">
+                    <label class="form-label">Nombre del Huésped</label>
+                    <input asp-for="NombreCliente" class="form-control" placeholder="Ej. Juan Pérez" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Teléfono de contacto</label>
+                    <input asp-for="Telefono" class="form-control" placeholder="Ej. 555-123-4567" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Asignar Habitación</label>
+                    <select asp-for="HabitacionId" class="form-control" asp-items="ViewBag.Habitaciones" required>
+                        <option value="">-- Selecciona un cuarto limpio --</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha de Entrada</label>
+                        <input asp-for="FechaEntrada" type="date" class="form-control" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha de Salida</label>
+                        <input asp-for="FechaSalida" type="date" class="form-control" required />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">Confirmar Reservación</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
