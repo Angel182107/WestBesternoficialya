@@ -1,0 +1,192 @@
+﻿@model WestBesternoficialya.Models.Evento
+
+@{
+    ViewData["Title"] = "Instructivo de Grupo";
+}
+
+<div class="container mt-4 mb-5" style="max-width: 1000px; background-color: white; padding: 30px; border: 1px solid #ccc; font-family: Arial, sans-serif;">
+    
+    <div class="d-print-none mb-4 d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver al Tablero</a>
+        <div>
+            <button onclick="window.print()" class="btn btn-dark"><i class="bi bi-printer"></i> Imprimir Formato</button>
+            <a asp-action="Firmar" asp-route-id="@Model.Id" class="btn btn-success ms-2">Marcar de Enterado</a>
+        </div>
+    </div>
+
+    <div class="p-3 mb-3 border border-dark" style="background-color: #e2e3e5;">
+        <h2 class="text-center fw-bold mb-3" style="letter-spacing: 2px;">HOTEL SAN PEDRO</h2>
+        <div class="d-flex justify-content-between fw-bold fs-5">
+            <div>INSTRUCTIVO DE GRUPO</div>
+            <div>FOLIO @(Model.Folio ?? "____")</div>
+        </div>
+    </div>
+
+    <table class="table table-bordered border-dark mt-0" style="font-size: 0.9rem;">
+        <tr>
+            <td style="width: 15%;" class="bg-light"><strong>Fecha:</strong></td>
+            <td style="width: 35%;">@(Model.Fecha?.ToString("dd-MMM-yy") ?? "---")</td>
+            <td style="width: 15%;" class="bg-light"><strong>Grupo:</strong></td>
+            <td style="width: 35%;" class="fw-bold text-uppercase">@(Model.Grupo ?? "---")</td>
+        </tr>
+        <tr>
+            <td class="bg-light"><strong>Agencia:</strong></td>
+            <td>@Model.Agencia</td>
+            <td class="bg-light"><strong>Tipo Grupo:</strong></td>
+            <td>@Model.TipoGrupo</td>
+        </tr>
+        <tr>
+            <td class="bg-light"><strong>Dirección:</strong></td>
+            <td>@Model.Direccion</td>
+            <td class="bg-light"><strong>Teléfono:</strong></td>
+            <td>@Model.Telefono</td>
+        </tr>
+        <tr>
+            <td class="bg-light"><strong>Coordinador:</strong></td>
+            <td>@Model.Coordinador</td>
+            <td class="bg-light"><strong>R.F.C.:</strong></td>
+            <td>@Model.Rfc</td>
+        </tr>
+        <tr>
+            <td class="bg-light"><strong>Ejecutivo:</strong></td>
+            <td>@Model.Ejecutivo</td>
+            <td class="bg-light"><strong>Ant:</strong></td> <td>@Model.Anticipo?.ToString("C")</td>
+        </tr>
+        <tr>
+            <td class="bg-light"><strong>Fecha Entrada:</strong></td>
+            <td class="fw-bold">@(Model.FechaEntrada?.ToString("dd/MM/yyyy") ?? "---")</td>
+            <td class="bg-light"><strong>Fecha Salida:</strong></td>
+            <td class="fw-bold">@(Model.FechaSalida?.ToString("dd/MM/yyyy") ?? "---")</td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td class="bg-light"><strong>Hora Llegada:</strong></td>
+            <td>@Model.HoraLlegada</td>
+        </tr>
+    </table>
+
+    <table class="table table-bordered border-dark text-center" style="font-size: 0.85rem;">
+        <thead class="bg-light">
+            <tr class="align-middle">
+                <th>TARIFAS</th>
+                <th>NÚMERO DE HABITACIONES</th>
+                <th>PAX</th>
+                <th>NOCHES</th>
+                <th>TOTAL</th>
+                <th>PROPINA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-start bg-light"><strong>SENCILLA</strong></td>
+                <td>@(Model.Sencillas ?? 0)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td class="text-start bg-light"><strong>DOBLE</strong></td>
+                <td>@(Model.Dobles ?? 0)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td class="text-start bg-light"><strong>TRIPLE</strong></td>
+                <td>@(Model.Triples ?? 0)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td class="text-start bg-light"><strong>CUÁDRUPLE</strong></td>
+                <td>@(Model.Cuadruples ?? 0)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td class="text-start bg-light"><strong>CORTESÍA</strong></td>
+                <td>@(Model.CortesiasHabitacion ?? 0)</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr class="fw-bold">
+                <td class="bg-light text-start">TOTALES</td>
+                <td>@((Model.Sencillas ?? 0) + (Model.Dobles ?? 0) + (Model.Triples ?? 0) + (Model.Cuadruples ?? 0) + (Model.CortesiasHabitacion ?? 0))</td>
+                <td>-</td>
+                <td colspan="3" class="text-end bg-light p-0">
+                    <table class="table table-bordered mb-0 border-dark">
+                        <tr><td style="width: 50%;" class="text-start">HOSPEDAJE:</td><td class="bg-white">@Model.CostoHospedaje?.ToString("C")</td></tr>
+                        <tr><td class="text-start">ALIMENTOS:</td><td class="bg-white">@Model.CostoAlimentos?.ToString("C")</td></tr>
+                        <tr><td class="text-start">PROPINAS:</td><td class="bg-white">@Model.CostoPropinas?.ToString("C")</td></tr>
+                        <tr class="table-secondary"><td class="text-start">TOTAL EVENTO:</td><td class="bg-white fw-bold">@Model.TotalEvento?.ToString("C")</td></tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered border-dark mt-3" style="font-size: 0.9rem;">
+        <tr class="bg-light">
+            <td colspan="2" class="fw-bold">NO. DE RESERVACIÓN: <span class="bg-white px-3 border border-dark ms-2">@Model.NumeroReservacion</span></td>
+        </tr>
+        <tr>
+            <td style="width: 25%;" class="bg-light"><strong>Cta. Maestra:</strong></td>
+            <td>@(Model.CuentaMaestra ? "HABITACIONES, IMPUESTOS Y SERVICIOS INCLUIDOS" : "")</td>
+        </tr>
+        <tr>
+            <td class="bg-light"><strong>Cta. Individual:</strong></td>
+            <td>@(Model.CuentasIndividuales ? "CUALQUIER EXTRA DEBE SER PAGADO POR EL HUÉSPED AL SOLICITARLO" : "")</td>
+        </tr>
+    </table>
+
+    <table class="table table-bordered border-dark mb-0" style="font-size: 0.85rem;">
+        <tr>
+            <td style="width: 50%; vertical-align: top;" class="bg-white">
+                <strong class="bg-light px-2 py-1 border border-dark d-inline-block mb-2">OBSERVACIONES:</strong><br />
+                @Model.Observaciones
+            </td>
+            <td style="width: 50%; background-color: #cfe2ff; color: #084298; text-align: center; vertical-align: middle;" class="fw-bold fs-5 px-4">
+                @(string.IsNullOrEmpty(Model.DetallesLogistica) ? "\"BRINDAR EL SERVICIO QUE NOS CARACTERIZA\"" : Model.DetallesLogistica.ToUpper())
+            </td>
+        </tr>
+    </table>
+
+    <table class="table table-bordered border-dark mt-0 border-top-0" style="font-size: 0.85rem;">
+        <tr><td style="width: 20%;" class="bg-light border-top-0"><strong>CORTESÍAS:</strong></td><td class="border-top-0">@Model.CortesiasExtras</td></tr>
+        
+        <tr><td class="bg-light"><strong>ANTICIPO:</strong></td><td>@Model.Anticipo?.ToString("C")</td></tr>
+        
+        <tr><td class="bg-light"><strong>FACTURAR A:</strong></td><td>@Model.FacturarA</td></tr>
+        <tr><td class="bg-light"><strong>DOMICILIO:</strong></td><td>@Model.DomicilioFacturacion</td></tr>
+        <tr><td class="bg-light"><strong>R.F.C.:</strong></td><td>@Model.RfcFacturacion</td></tr>
+        <tr><td class="bg-light"><strong>TELÉFONO FACT.:</strong></td><td>@Model.TelefonoFacturacion</td></tr>
+        
+        <tr><td class="bg-light"><strong>TELÉFONO GUÍA:</strong></td><td>@Model.Guia</td></tr>
+        
+        <tr><td class="bg-light"><strong>DESPERTADOR:</strong></td><td>@Model.Despertador</td></tr>
+        <tr><td class="bg-light"><strong>ALIMENTOS:</strong></td><td>@Model.NotasAlimentos</td></tr>
+        <tr><td class="bg-light"><strong>EQUIPAJE:</strong></td><td>@Model.Equipaje</td></tr>
+    </table>
+
+</div>
+
+<style>
+    /* Estilos para que la hoja salga perfecta al imprimir */
+    @@media print {
+        body { background-color: white !important; }
+        .container { border: none !important; box-shadow: none !important; width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important;}
+        .btn, .d-print-none { display: none !important; }
+        
+        /* Forzar que se impriman los colores de fondo como el gris y el azul */
+        * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
+    }
+    .bg-light { background-color: #f8f9fa !important; font-weight: bold; }
+</style>

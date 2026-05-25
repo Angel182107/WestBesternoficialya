@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WestBesternoficialya.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260525191447_AgregarFormatoGrupoMySQL")]
+    partial class AgregarFormatoGrupoMySQL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,22 +138,19 @@ namespace WestBesternoficialya.Migrations
                     b.Property<string>("FacturarA")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("Fecha")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("FechaEntrada")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("FechaGrupo")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime?>("FechaSalida")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Folio")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Grupo")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Guia")

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WestBesternoficialya.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260525181402_AgregarCreadorAEvento")]
+    partial class AgregarCreadorAEvento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,129 +75,22 @@ namespace WestBesternoficialya.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Agencia")
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal?>("Anticipo")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<string>("Coordinador")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("CortesiasExtras")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("CortesiasHabitacion")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("CostoAlimentos")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal?>("CostoHospedaje")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal?>("CostoPropinas")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<string>("Creador")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("Cuadruples")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("CuentaMaestra")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("CuentasIndividuales")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Despertador")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("DetallesLogistica")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Direccion")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("Dobles")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DomicilioFacturacion")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Ejecutivo")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Equipaje")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("EsUrgente")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("FacturarA")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("Fecha")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("FechaEntrada")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("FechaSalida")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Folio")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Grupo")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Guia")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("HoraLlegada")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("NotasAlimentos")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("NumeroReservacion")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Observaciones")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Rfc")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("RfcFacturacion")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("Sencillas")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Telefono")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("TelefonoFacturacion")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("TipoGrupo")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<decimal?>("TotalEvento")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<int?>("Triples")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

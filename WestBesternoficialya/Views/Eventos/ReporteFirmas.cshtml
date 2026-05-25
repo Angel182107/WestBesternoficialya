@@ -1,38 +1,53 @@
 ﻿@model IEnumerable<WestBesternoficialya.Models.AcuseRecibo>
 
 <div class="container mt-4">
-    <h2>Reporte de Lectura</h2>
-    <h4 class="text-muted">Aviso: @ViewBag.TituloEvento</h4>
-    <hr />
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="bi bi-file-earmark-check"></i> Reporte de Lectura</h2>
+        
+        <span class="badge bg-success fs-6">
+            Total de firmas: @Model.Count()
+        </span>
+    </div>
 
-    <table class="table table-striped mt-4">
-        <thead class="table-dark">
-            <tr>
-                <th>Nombre del Empleado</th>
-                <th>Fecha y Hora Exacta de la Firma</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (!Model.Any())
-            {
+    <div class="alert alert-secondary border-0 shadow-sm">
+        <h4 class="mb-0"><i class="bi bi-megaphone"></i> Aviso: @ViewBag.TituloEvento</h4>
+    </div>
+    
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="table-dark">
                 <tr>
-                    <td colspan="2" class="text-center text-muted py-4">
-                        <em>Nadie ha firmado de enterado este aviso todavía.</em>
-                    </td>
+                    <th><i class="bi bi-person-badge"></i> Nombre del Empleado</th>
+                    <th><i class="bi bi-clock-history"></i> Fecha y Hora de la Firma</th>
                 </tr>
-            }
-            else
-            {
-                @foreach (var firma in Model)
+            </thead>
+            <tbody>
+                @if (!Model.Any())
                 {
                     <tr>
-                        <td class="fw-bold">@firma.Usuario.NombreCompleto</td>
-                        <td>@firma.FechaHoraFirma.ToString("dd/MM/yyyy hh:mm tt")</td>
+                        <td colspan="2" class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            <em>Nadie ha firmado de enterado este aviso todavía.</em>
+                        </td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
+                else
+                {
+                    @foreach (var firma in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold align-middle">@firma.Usuario.NombreCompleto</td>
+                            <td class="align-middle text-muted">@firma.FechaHoraFirma.ToString("dd/MM/yyyy hh:mm tt")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
 
-    <a asp-action="Index" class="btn btn-secondary mt-3">Volver al Tablero de Anuncios</a>
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver al Tablero de Anuncios
+        </a>
+    </div>
 </div>
