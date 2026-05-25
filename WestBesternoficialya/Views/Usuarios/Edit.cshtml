@@ -8,26 +8,29 @@
             <form asp-action="Edit" method="post">
 
                 <input type="hidden" asp-for="Id" />
-                
+
                 <div class="mb-3">
                     <label class="form-label">Nombre Completo</label>
-                    <input asp-for="NombreCompleto" class="form-control" />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Correo Electrónico</label>
-                    <input asp-for="Email" type="email" class="form-control" />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Contraseña</label>
-                    <input asp-for="Password" type="password" class="form-control" />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Departamento asignado</label>
-                    <select asp-for="DepartamentoId" class="form-control" asp-items="ViewBag.Departamentos"></select>
+                    <input asp-for="NombreCompleto" class="form-control" required />
                 </div>
 
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                <div class="mb-3">
+                    <label class="form-label">Correo Electrónico</label>
+                    <input asp-for="Email" type="email" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input asp-for="Password" type="password" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-primary fw-bold">Departamento asignado (Da permisos automáticos)</label>
+                    <select asp-for="DepartamentoId" class="form-control border-primary shadow-sm" asp-items="ViewBag.Departamentos" required></select>
+                </div>
+
+                <button type="submit" class="btn btn-primary shadow-sm">Guardar Cambios</button>
+                <a asp-action="Index" class="btn btn-secondary shadow-sm">Cancelar</a>
             </form>
         </div>
     </div>

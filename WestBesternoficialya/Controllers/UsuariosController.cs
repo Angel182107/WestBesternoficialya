@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization; // <-- No olvides esta línea hasta ar
 
 namespace WestBesternoficialya.Controllers;
 
-[Authorize] // <-- ¡ESTE ES EL CANDADO! Nadie entra sin gafete.
+[Authorize(Roles = "Administrador")] // ¡Candado especial! Solo el Jefe entra aquí.
 public class UsuariosController : Controller
 {
     // ... el resto de tu código ...
