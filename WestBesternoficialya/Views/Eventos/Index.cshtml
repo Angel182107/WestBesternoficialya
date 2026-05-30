@@ -25,13 +25,12 @@
         {
             <div class="col-md-4 mb-4">
                 <div class="card shadow h-100">
+                    
+                    <!-- AQUÍ ESTABA EL ERROR: Ya quedó limpio solo con el título -->
                     <div class="card-header bg-dark text-white fw-bold">
-                        @if (evento.EsUrgente)
-                        {
-                            <span class="badge bg-danger me-1">URGENTE</span>
-                        }
                         Aviso del Hotel
                     </div>
+                    
                     <div class="card-body">
                         <h5 class="card-title">@evento.Titulo</h5>
                         

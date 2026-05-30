@@ -12,7 +12,6 @@ namespace WestBesternoficialya.Models
         public string Titulo { get; set; }
         public string? DetallesLogistica { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
-        public bool EsUrgente { get; set; }
         public string? Creador { get; set; }
 
         // ==========================================
@@ -63,10 +62,17 @@ namespace WestBesternoficialya.Models
         public decimal? CostoAlimentos { get; set; }
         public decimal? CostoPropinas { get; set; }
         public decimal? TotalEvento { get; set; }
-        public decimal? Anticipo { get; set; }
+        public string? Ant { get; set; }
+        public string? Anticipo { get; set; }
 
-        public bool CuentaMaestra { get; set; }
-        public bool CuentasIndividuales { get; set; }
+        public decimal? TarifaSencilla { get; set; }
+        public decimal? TarifaDoble { get; set; }
+        public decimal? TarifaTriple { get; set; }
+        public decimal? TarifaCuadruple { get; set; }
+        public decimal? TarifaCortesia { get; set; }
+
+        public string? CuentaMaestra { get; set; }
+        public string? CuentasIndividuales { get; set; }
 
         // 5. Facturación
         [Display(Name = "Facturar a")]
@@ -85,5 +91,17 @@ namespace WestBesternoficialya.Models
         public string? NotasAlimentos { get; set; }
         public string? CortesiasExtras { get; set; }
         public string? Observaciones { get; set; }
+
+        public string? PropinaSencilla { get; set; }
+        public string? PropinaDoble { get; set; }
+        public string? PropinaTriple { get; set; }
+        public string? PropinaCuadruple { get; set; }
+        public string? PropinaCortesia { get; set; }
+
+        public int? NochesSencilla { get; set; }
+        public int? NochesDoble { get; set; }
+        public int? NochesTriple { get; set; }
+        public int? NochesCuadruple { get; set; }
+        public int? NochesCortesia { get; set; }
     }
 }

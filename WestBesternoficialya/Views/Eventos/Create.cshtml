@@ -8,15 +8,9 @@
         
         <div class="card shadow-sm mb-3">
             <div class="card-body row">
-                <div class="col-md-8 mb-3">
+                <div class="col-md-12 mb-3">
                     <label asp-for="Titulo" class="form-label fw-bold">Título del Aviso <span class="text-danger">*</span></label>
-                    <input asp-for="Titulo" class="form-control" placeholder="Ej. Mañana mantenimiento de elevadores o Llegada de Grupo" required />
-                </div>
-                <div class="col-md-4 mb-3 d-flex align-items-end">
-                    <div class="form-check form-switch fs-5 mb-1">
-                        <input class="form-check-input" type="checkbox" asp-for="EsUrgente">
-                        <label class="form-check-label text-danger fw-bold" asp-for="EsUrgente">Marcar como URGENTE</label>
-                    </div>
+                    <input asp-for="Titulo" class="form-control" placeholder="Ej. Mantenimiento de elevadores o Llegada de Grupo" required />
                 </div>
                 <div class="col-md-12 mb-3">
                     <label asp-for="DetallesLogistica" class="form-label fw-bold">Detalles del Aviso</label>
@@ -45,8 +39,9 @@
                     <div class="col-md-3 mb-3"><label asp-for="Agencia" class="form-label">Agencia o Cía</label><input asp-for="Agencia" class="form-control" /></div>
                     <div class="col-md-2 mb-3"><label asp-for="TipoGrupo" class="form-label">Tipo de Grupo</label><input asp-for="TipoGrupo" class="form-control" /></div>
                     
-                    <div class="col-md-6 mb-3"><label asp-for="Coordinador" class="form-label">Coordinador</label><input asp-for="Coordinador" class="form-control" /></div>
-                    <div class="col-md-6 mb-3"><label asp-for="Ejecutivo" class="form-label">Ejecutivo de Ventas</label><input asp-for="Ejecutivo" class="form-control" /></div>
+                    <div class="col-md-5 mb-3"><label asp-for="Coordinador" class="form-label">Coordinador</label><input asp-for="Coordinador" class="form-control" /></div>
+                    <div class="col-md-5 mb-3"><label asp-for="Ejecutivo" class="form-label">Ejecutivo de Ventas</label><input asp-for="Ejecutivo" class="form-control" /></div>
+                    <div class="col-md-2 mb-3"><label asp-for="Ant" class="form-label">Ant (Arriba)</label><input asp-for="Ant" class="form-control" /></div>
                     
                     <div class="col-md-4 mb-3"><label asp-for="Telefono" class="form-label">Teléfono</label><input asp-for="Telefono" class="form-control" /></div>
                     <div class="col-md-8 mb-3"><label asp-for="Direccion" class="form-label">Dirección</label><input asp-for="Direccion" class="form-control" /></div>
@@ -57,38 +52,70 @@
                 <div class="card-header bg-dark text-white fw-bold">2. Logística y Distribución de Cuartos</div>
                 <div class="card-body row">
                     <div class="col-md-3 mb-3"><label asp-for="NumeroReservacion" class="form-label">No. de Reservación</label><input asp-for="NumeroReservacion" class="form-control" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="FechaEntrada" class="form-label">Fecha de Entrada</label><input asp-for="FechaEntrada" type="date" class="form-control" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="FechaSalida" class="form-label">Fecha de Salida</label><input asp-for="FechaSalida" type="date" class="form-control" /></div>
+                    <div class="col-md-3 mb-3"><label asp-for="FechaEntrada" class="form-label">Fecha de Entrada</label><input asp-for="FechaEntrada" type="date" class="form-control" id="FechaEntrada" /></div>
+                    <div class="col-md-3 mb-3"><label asp-for="FechaSalida" class="form-label">Fecha de Salida</label><input asp-for="FechaSalida" type="date" class="form-control" id="FechaSalida" /></div>
                     <div class="col-md-3 mb-3"><label asp-for="HoraLlegada" class="form-label">Hora de Llegada</label><input asp-for="HoraLlegada" type="time" class="form-control" /></div>
 
-                    <div class="col-md-12 mt-2"><label class="form-label fw-bold text-secondary">Número de Habitaciones</label></div>
-                    <div class="col-md-2 mb-3"><label asp-for="Sencillas" class="form-label">Sencilla</label><input asp-for="Sencillas" type="number" class="form-control" /></div>
-                    <div class="col-md-2 mb-3"><label asp-for="Dobles" class="form-label">Doble</label><input asp-for="Dobles" type="number" class="form-control" /></div>
-                    <div class="col-md-2 mb-3"><label asp-for="Triples" class="form-label">Triple</label><input asp-for="Triples" type="number" class="form-control" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="Cuadruples" class="form-label">Cuádruple</label><input asp-for="Cuadruples" type="number" class="form-control" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="CortesiasHabitacion" class="form-label">Cortesía</label><input asp-for="CortesiasHabitacion" type="number" class="form-control" /></div>
+                    <div class="col-md-12 mt-2"><label class="form-label fw-bold text-secondary">N° de Habitaciones, Tarifas, Noches y Propinas</label></div>
+                    
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label text-primary fw-bold mb-1">Sencillas</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Habs</span><input asp-for="Sencillas" type="number" class="form-control" id="Sencillas" />
+                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaSencilla" type="number" step="0.01" class="form-control" id="TarifaSencilla" />
+                            <span class="input-group-text">Noches</span><input asp-for="NochesSencilla" type="number" class="form-control" id="NochesSencilla" />
+                            <span class="input-group-text">Propina</span><input asp-for="PropinaSencilla" class="form-control" id="PropinaSencilla" placeholder="Ej. 10.50" />
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label text-primary fw-bold mb-1">Dobles</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Habs</span><input asp-for="Dobles" type="number" class="form-control" id="Dobles" />
+                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaDoble" type="number" step="0.01" class="form-control" id="TarifaDoble" />
+                            <span class="input-group-text">Noches</span><input asp-for="NochesDoble" type="number" class="form-control" id="NochesDoble" />
+                            <span class="input-group-text">Propina</span><input asp-for="PropinaDoble" class="form-control" id="PropinaDoble" />
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label text-primary fw-bold mb-1">Triples</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Habs</span><input asp-for="Triples" type="number" class="form-control" id="Triples" />
+                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaTriple" type="number" step="0.01" class="form-control" id="TarifaTriple" />
+                            <span class="input-group-text">Noches</span><input asp-for="NochesTriple" type="number" class="form-control" id="NochesTriple" />
+                            <span class="input-group-text">Propina</span><input asp-for="PropinaTriple" class="form-control" id="PropinaTriple" />
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label text-primary fw-bold mb-1">Cuádruples</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Habs</span><input asp-for="Cuadruples" type="number" class="form-control" id="Cuadruples" />
+                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaCuadruple" type="number" step="0.01" class="form-control" id="TarifaCuadruple" />
+                            <span class="input-group-text">Noches</span><input asp-for="NochesCuadruple" type="number" class="form-control" id="NochesCuadruple" />
+                            <span class="input-group-text">Propina</span><input asp-for="PropinaCuadruple" class="form-control" id="PropinaCuadruple" />
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label text-primary fw-bold mb-1">Cortesías</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Habs</span><input asp-for="CortesiasHabitacion" type="number" class="form-control" id="CortesiasHabitacion" />
+                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaCortesia" type="number" step="0.01" class="form-control" id="TarifaCortesia" />
+                            <span class="input-group-text">Noches</span><input asp-for="NochesCortesia" type="number" class="form-control" id="NochesCortesia" />
+                            <span class="input-group-text">Propina</span><input asp-for="PropinaCortesia" class="form-control" id="PropinaCortesia" />
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-dark text-white fw-bold">3. Cuentas y Facturación</div>
                 <div class="card-body row">
-                    <div class="col-md-3 mb-3"><label asp-for="CostoHospedaje" class="form-label">Hospedaje $</label><input asp-for="CostoHospedaje" type="number" step="0.01" class="form-control" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="CostoAlimentos" class="form-label">Alimentos $</label><input asp-for="CostoAlimentos" type="number" step="0.01" class="form-control" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="CostoPropinas" class="form-label">Propinas $</label><input asp-for="CostoPropinas" type="number" step="0.01" class="form-control" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="TotalEvento" class="form-label fw-bold text-success">Total Evento $</label><input asp-for="TotalEvento" type="number" step="0.01" class="form-control border-success" /></div>
+                    <div class="col-md-3 mb-3"><label asp-for="CostoHospedaje" class="form-label">Hospedaje $</label><input asp-for="CostoHospedaje" type="number" step="0.01" class="form-control" id="CostoHospedaje" /></div>
+                    <div class="col-md-3 mb-3"><label asp-for="CostoAlimentos" class="form-label">Alimentos $</label><input asp-for="CostoAlimentos" type="number" step="0.01" class="form-control" id="CostoAlimentos" /></div>
+                    <div class="col-md-3 mb-3"><label asp-for="CostoPropinas" class="form-label">Propinas $</label><input asp-for="CostoPropinas" type="number" step="0.01" class="form-control" id="CostoPropinas" /></div>
+                    <div class="col-md-3 mb-3"><label asp-for="TotalEvento" class="form-label fw-bold text-success">Total Evento $</label><input asp-for="TotalEvento" type="number" step="0.01" class="form-control border-success" id="TotalEvento" /></div>
                     
-                    <div class="col-md-4 mb-3"><label asp-for="Anticipo" class="form-label">Anticipo</label><input asp-for="Anticipo" type="number" step="0.01" class="form-control" /></div>
-                    <div class="col-md-8 mb-3 pt-4">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" asp-for="CuentaMaestra">
-                            <label class="form-check-label" asp-for="CuentaMaestra">Cta. Maestra I</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" asp-for="CuentasIndividuales">
-                            <label class="form-check-label" asp-for="CuentasIndividuales">Cta. Individuales</label>
-                        </div>
-                    </div>
+                    <div class="col-md-6 mb-3"><label asp-for="CuentaMaestra" class="form-label">Cta. Maestra</label><input asp-for="CuentaMaestra" class="form-control" placeholder="Ej. Habitaciones e impuestos" /></div>
+                    <div class="col-md-6 mb-3"><label asp-for="CuentasIndividuales" class="form-label">Cta. Individual</label><input asp-for="CuentasIndividuales" class="form-control" placeholder="Ej. Extras pagados por huésped" /></div>
 
                     <div class="col-md-12"><hr /></div>
                     
@@ -102,13 +129,18 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-dark text-white fw-bold">4. Requerimientos de Operación</div>
                 <div class="card-body row">
-                    <div class="col-md-4 mb-3"><label asp-for="Guia" class="form-label">Teléfono Guía</label><input asp-for="Guia" class="form-control" /></div>
-                    <div class="col-md-4 mb-3"><label asp-for="Despertador" class="form-label">Despertador</label><input asp-for="Despertador" class="form-control" /></div>
-                    <div class="col-md-4 mb-3"><label asp-for="Equipaje" class="form-label">Equipaje</label><input asp-for="Equipaje" class="form-control" /></div>
+                    <div class="col-md-12 mb-3"><label asp-for="Anticipo" class="form-label">Anticipo (Abajo)</label><input asp-for="Anticipo" class="form-control" placeholder="Ej. Se pasan comprobantes un día antes" /></div>
                     
+                    <div class="col-md-6 mb-3"><label asp-for="Guia" class="form-label">Teléfono Guía</label><input asp-for="Guia" class="form-control" /></div>
+                    <div class="col-md-6 mb-3"><label asp-for="Despertador" class="form-label">Despertador</label><input asp-for="Despertador" class="form-control" /></div>
+                    <div class="col-md-12 mb-3"><label asp-for="Equipaje" class="form-label">Equipaje</label><input asp-for="Equipaje" class="form-control" /></div>
                     <div class="col-md-12 mb-3"><label asp-for="NotasAlimentos" class="form-label">Alimentos</label><textarea asp-for="NotasAlimentos" class="form-control" rows="2"></textarea></div>
-                    <div class="col-md-6 mb-3"><label asp-for="CortesiasExtras" class="form-label">Cortesías</label><textarea asp-for="CortesiasExtras" class="form-control" rows="2"></textarea></div>
-                    <div class="col-md-6 mb-3"><label asp-for="Observaciones" class="form-label">Observaciones</label><textarea asp-for="Observaciones" class="form-control" rows="2"></textarea></div>
+                    <div class="col-md-12 mb-3"><label asp-for="CortesiasExtras" class="form-label">Cortesías</label><textarea asp-for="CortesiasExtras" class="form-control" rows="2"></textarea></div>
+                    
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Observaciones" class="form-label fw-bold text-primary">Observaciones (Aparecerá en el Banner Azul)</label>
+                        <textarea asp-for="Observaciones" class="form-control border-primary" rows="2" placeholder="Ej. BRINDAR EL SERVICIO QUE NOS CARACTERIZA"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
@@ -119,3 +151,53 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        function extraerNumero(texto) {
+            if (!texto) return 0;
+            let match = texto.match(/\d+(\.\d+)?/);
+            return match ? parseFloat(match[0]) : 0;
+        }
+
+        function calcularTotales() {
+            let getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+            let getTexto = (id) => document.getElementById(id).value || "";
+            
+            let habS = getVal('Sencillas'), tarS = getVal('TarifaSencilla'), nocS = getVal('NochesSencilla');
+            let habD = getVal('Dobles'), tarD = getVal('TarifaDoble'), nocD = getVal('NochesDoble');
+            let habT = getVal('Triples'), tarT = getVal('TarifaTriple'), nocT = getVal('NochesTriple');
+            let habC = getVal('Cuadruples'), tarC = getVal('TarifaCuadruple'), nocC = getVal('NochesCuadruple');
+            let habCor = getVal('CortesiasHabitacion'), tarCor = getVal('TarifaCortesia'), nocCor = getVal('NochesCortesia');
+
+            // Cálculo individual exacto por fila como en Excel
+            let totalHospedaje = (habS * tarS * nocS) +
+                                 (habD * tarD * nocD) +
+                                 (habT * tarT * nocT) +
+                                 (habC * tarC * nocC) +
+                                 (habCor * tarCor * nocCor);
+                                 
+            document.getElementById('CostoHospedaje').value = totalHospedaje.toFixed(2);
+
+            // Propinas automáticas
+            let sumaPropinas = extraerNumero(getTexto('PropinaSencilla')) +
+                               extraerNumero(getTexto('PropinaDoble')) +
+                               extraerNumero(getTexto('PropinaTriple')) +
+                               extraerNumero(getTexto('PropinaCuadruple')) +
+                               extraerNumero(getTexto('PropinaCortesia'));
+            
+            document.getElementById('CostoPropinas').value = sumaPropinas.toFixed(2);
+
+            // Gran Total del Evento
+            let alimentos = getVal('CostoAlimentos');
+            let propinasFinal = getVal('CostoPropinas');
+            
+            let granTotal = totalHospedaje + alimentos + propinasFinal;
+            document.getElementById('TotalEvento').value = granTotal.toFixed(2);
+        }
+
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', calcularTotales);
+        });
+    </script>
+}
