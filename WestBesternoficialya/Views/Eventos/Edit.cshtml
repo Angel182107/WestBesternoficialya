@@ -1,31 +1,194 @@
 ﻿@model WestBesternoficialya.Models.Evento
 
 <div class="container mt-4">
-    <h2>Editar Aviso</h2>
+    <h2 class="text-primary fw-bold">✏️ Editar Instructivo / Aviso</h2>
     <hr />
-    <div class="row">
-        <div class="col-md-6">
-            <form asp-action="Edit" method="post">
-                <input type="hidden" asp-for="Id" />
-                
-                <div class="mb-3">
-                    <label class="form-label">Título del Evento o Aviso</label>
-                    <input asp-for="Titulo" class="form-control" />
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Descripción</label>
-                    <textarea asp-for="DetallesLogistica" class="form-control" rows="3"></textarea>
-                </div>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="FechaCreacion" />
+        <input type="hidden" asp-for="Creador" />
 
-                <div class="mb-3">
-                    <label class="form-label">Fecha del Evento</label>
-                    <input asp-for="FechaCreacion" type="date" class="form-control" />
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="card shadow-sm border-primary">
+                    <div class="card-header bg-primary text-white fw-bold">1. AVISO Y DATOS GENERALES</div>
+                    <div class="card-body row g-2">
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label fw-bold">Título del Aviso en el Sistema</label>
+                            <input asp-for="Titulo" class="form-control border-primary" required />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Folio</label>
+                            <input asp-for="Folio" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha del Documento</label>
+                            <input asp-for="Fecha" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre del Grupo</label>
+                            <input asp-for="Grupo" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Agencia o Cía</label>
+                            <input asp-for="Agencia" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tipo de Grupo</label>
+                            <input asp-for="TipoGrupo" class="form-control" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">RFC (Agencia)</label>
+                            <input asp-for="Rfc" class="form-control" />
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Dirección</label>
+                            <input asp-for="Direccion" class="form-control" />
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-            </form>
+            <div class="col-md-12 mb-3">
+                <div class="card shadow-sm border-info">
+                    <div class="card-header bg-info text-dark fw-bold">2. LOGÍSTICA Y CONTACTOS</div>
+                    <div class="card-body row g-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Coordinador</label>
+                            <input asp-for="Coordinador" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Ejecutivo</label>
+                            <input asp-for="Ejecutivo" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Teléfono</label>
+                            <input asp-for="Telefono" class="form-control" />
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label class="form-label">Fecha de Entrada</label>
+                            <input asp-for="FechaEntrada" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label class="form-label">Fecha de Salida</label>
+                            <input asp-for="FechaSalida" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label class="form-label">Hora de Llegada</label>
+                            <input asp-for="HoraLlegada" type="time" class="form-control" />
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label class="form-label">No. Reservación</label>
+                            <input asp-for="NumeroReservacion" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <div class="card shadow-sm border-secondary">
+                    <div class="card-header bg-secondary text-white fw-bold">3. DETALLE DE HABITACIONES</div>
+                    <div class="card-body overflow-auto">
+                        <table class="table table-bordered text-center align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Cantidad</th>
+                                    <th>Noches</th>
+                                    <th>Tarifa $</th>
+                                    <th>Propina</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold">Sencilla</td>
+                                    <td><input asp-for="Sencillas" class="form-control text-center" /></td>
+                                    <td><input asp-for="NochesSencilla" class="form-control text-center" /></td>
+                                    <td><input asp-for="TarifaSencilla" class="form-control text-center" /></td>
+                                    <td><input asp-for="PropinaSencilla" class="form-control text-center" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Doble</td>
+                                    <td><input asp-for="Dobles" class="form-control text-center" /></td>
+                                    <td><input asp-for="NochesDoble" class="form-control text-center" /></td>
+                                    <td><input asp-for="TarifaDoble" class="form-control text-center" /></td>
+                                    <td><input asp-for="PropinaDoble" class="form-control text-center" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Triple</td>
+                                    <td><input asp-for="Triples" class="form-control text-center" /></td>
+                                    <td><input asp-for="NochesTriple" class="form-control text-center" /></td>
+                                    <td><input asp-for="TarifaTriple" class="form-control text-center" /></td>
+                                    <td><input asp-for="PropinaTriple" class="form-control text-center" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Cuádruple</td>
+                                    <td><input asp-for="Cuadruples" class="form-control text-center" /></td>
+                                    <td><input asp-for="NochesCuadruple" class="form-control text-center" /></td>
+                                    <td><input asp-for="TarifaCuadruple" class="form-control text-center" /></td>
+                                    <td><input asp-for="PropinaCuadruple" class="form-control text-center" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-success">Cortesía</td>
+                                    <td><input asp-for="CortesiasHabitacion" class="form-control text-center border-success" /></td>
+                                    <td><input asp-for="NochesCortesia" class="form-control text-center border-success" /></td>
+                                    <td><input asp-for="TarifaCortesia" class="form-control text-center border-success" /></td>
+                                    <td><input asp-for="PropinaCortesia" class="form-control text-center border-success" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <div class="card shadow-sm border-success">
+                    <div class="card-header bg-success text-white fw-bold">4. FINANZAS Y FACTURACIÓN</div>
+                    <div class="card-body row g-2">
+                        <div class="col-md-3"><label>Costo Hospedaje</label><input asp-for="CostoHospedaje" class="form-control" /></div>
+                        <div class="col-md-3"><label>Costo Alimentos</label><input asp-for="CostoAlimentos" class="form-control" /></div>
+                        <div class="col-md-3"><label>Costo Propinas</label><input asp-for="CostoPropinas" class="form-control" /></div>
+                        <div class="col-md-3"><label class="fw-bold text-success">TOTAL EVENTO</label><input asp-for="TotalEvento" class="form-control border-success fw-bold" /></div>
+
+                        <div class="col-md-6 mt-3"><label>Anticipo</label><input asp-for="Anticipo" class="form-control" /></div>
+                        <div class="col-md-6 mt-3"><label>Notas Anticipo (Ant)</label><input asp-for="Ant" class="form-control" /></div>
+
+                        <div class="col-md-6 mt-3"><label>Cuenta Maestra</label><input asp-for="CuentaMaestra" class="form-control" /></div>
+                        <div class="col-md-6 mt-3"><label>Cuentas Individuales</label><input asp-for="CuentasIndividuales" class="form-control" /></div>
+
+                        <hr class="mt-4" />
+                        <h6 class="fw-bold">Datos de Facturación</h6>
+                        <div class="col-md-6"><label>Facturar a</label><input asp-for="FacturarA" class="form-control" /></div>
+                        <div class="col-md-6"><label>RFC Facturación</label><input asp-for="RfcFacturacion" class="form-control" /></div>
+                        <div class="col-md-8 mt-2"><label>Domicilio</label><input asp-for="DomicilioFacturacion" class="form-control" /></div>
+                        <div class="col-md-4 mt-2"><label>Teléfono</label><input asp-for="TelefonoFacturacion" class="form-control" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning text-dark fw-bold">5. OPERACIÓN Y OBSERVACIONES</div>
+                    <div class="card-body row g-2">
+                        <div class="col-md-4"><label>Guía</label><input asp-for="Guia" class="form-control" /></div>
+                        <div class="col-md-4"><label>Despertador</label><input asp-for="Despertador" class="form-control" /></div>
+                        <div class="col-md-4"><label>Equipaje</label><input asp-for="Equipaje" class="form-control" /></div>
+
+                        <div class="col-md-6 mt-3"><label>Notas Alimentos</label><input asp-for="NotasAlimentos" class="form-control" /></div>
+                        <div class="col-md-6 mt-3"><label>Cortesías Extras</label><input asp-for="CortesiasExtras" class="form-control" /></div>
+
+                        <div class="col-md-12 mt-3"><label>Observaciones (Instructivo)</label><textarea asp-for="Observaciones" class="form-control" rows="2"></textarea></div>
+                        <div class="col-md-12 mt-3"><label>Detalles de Logística (Aviso general)</label><textarea asp-for="DetallesLogistica" class="form-control" rows="2"></textarea></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </div>
+
+        <div class="mt-4 mb-5 text-center d-print-none">
+            <button type="submit" class="btn btn-primary btn-lg fw-bold px-5 shadow-sm">💾 Guardar Cambios</button>
+            <a asp-action="Index" class="btn btn-secondary btn-lg px-5 ms-3 shadow-sm">Cancelar</a>
+        </div>
+    </form>
 </div>

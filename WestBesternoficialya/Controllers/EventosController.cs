@@ -26,10 +26,30 @@ public class EventosController : Controller
     }
 
     // --- VIAJE DE IDA: Formulario para publicar un aviso ---
+    // Agregamos el candado para que solo el Admin pueda crear instructivos
+    [Authorize(Roles = "Administrador")]
     public IActionResult Create()
     {
         return View();
     }
+
+    // --- VIAJE DE VUELTA: Guardar el aviso nuevo ---
+    [HttpPost]
+    [Authorize(Roles = "Administrador")]
+    public async Task<IActionResult> Create(Evento evento)
+    {
+        if (ModelState.IsValid)
+        {
+            // Guardamos de forma segura el NombreCompleto de la sesión activa
+            evento.Creador = User.Identity.Name;
+
+            _context.Eventos.Add(evento);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        return View(evento);
+    }
+
     // ==========================================
     // SECCIÓN: VER DETALLES DEL AVISO / FORMATO
     // ==========================================
@@ -55,20 +75,75 @@ public class EventosController : Controller
         return View(evento);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(Evento evento)
+    // ==========================================
+    // SECCIÓN: EDITAR EVENTO (PROTEGIDO)
+    // ==========================================
+
+    // 1. VIAJE DE IDA: Mostrar la pantalla con los datos llenos
+    [HttpGet]
+    [Authorize(Roles = "Administrador")] // <-- Nuevo candado: Solo Administradores editan
+    public async Task<IActionResult> Edit(int? id)
     {
+        if (id == null) return NotFound();
+
+        var evento = await _context.Eventos.FindAsync(id);
+        if (evento == null) return NotFound();
+
+        return View(evento);
+    }
+
+    // 2. VIAJE DE VUELTA: Guardar los cambios nuevos
+    [HttpPost]
+    [Authorize(Roles = "Administrador")] // <-- Nuevo candado de seguridad
+    public async Task<IActionResult> Edit(int id, Evento evento)
+    {
+        if (id != evento.Id) return NotFound();
+
         if (ModelState.IsValid)
         {
-            // Guardamos de forma segura el NombreCompleto de la sesión activa
-            evento.Creador = User.Identity.Name;
-
-            _context.Eventos.Add(evento);
+            // Reemplazamos lo viejo por lo nuevo directamente
+            _context.Update(evento);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return RedirectToAction(nameof(Index)); // Lo regresamos a la lista
         }
         return View(evento);
     }
+
+    // ==========================================
+    // SECCIÓN: ELIMINAR EVENTO (PROTEGIDO)
+    // ==========================================
+
+    // 1. VIAJE DE IDA: Muestra la pantalla de confirmación
+    [HttpGet]
+    [Authorize(Roles = "Administrador")] // <-- Nuevo candado: Solo Administradores borran
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var evento = await _context.Eventos.FirstOrDefaultAsync(m => m.Id == id);
+        if (evento == null) return NotFound();
+
+        return View(evento);
+    }
+
+    // 2. VIAJE DE VUELTA: Elimina el registro de la base de datos
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken] // Protección esencial contra ataques CSRF en formularios
+    [Authorize(Roles = "Administrador")] // <-- Nuevo candado de seguridad
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var evento = await _context.Eventos.FindAsync(id);
+
+        if (evento == null) return NotFound();
+
+        _context.Eventos.Remove(evento);
+        await _context.SaveChangesAsync();
+
+        TempData["MensajeExito"] = "El formato se eliminó correctamente.";
+        return RedirectToAction(nameof(Index));
+    }
+
     // ==========================================
     // SECCIÓN: FIRMA DIGITAL (ACUSE DE RECIBO)
     // ==========================================
@@ -81,115 +156,17 @@ public class EventosController : Controller
         var evento = await _context.Eventos.FindAsync(id);
         if (evento == null) return NotFound();
 
-        // ¡ELIMINAMOS la línea de ViewBag.Usuarios! 
-        // Ya no llevamos la charola con los nombres, el candado [Authorize] hará la magia.
-
         return View(evento);
-    }
-    // ==========================================
-    // SECCIÓN: EDITAR EVENTO (PROTEGIDO)
-    // ==========================================
-
-    // 1. VIAJE DE IDA: Comprobamos si el usuario tiene permiso de ver la pantalla de edición
-    public async Task<IActionResult> Edit(int? id)
-    {
-        if (id == null) return NotFound();
-
-        var evento = await _context.Eventos.FindAsync(id);
-        if (evento == null) return NotFound();
-
-        // VALIDACIÓN DE SEGURIDAD: Si no eres el creador, te regresamos al tablero
-        if (evento.Creador != User.Identity.Name)
-        {
-            TempData["MensajeInfo"] = "No tienes permisos para editar este aviso. Solo el creador (" + evento.Creador + ") puede modificarlo.";
-            return RedirectToAction(nameof(Index));
-        }
-
-        return View(evento);
-    }
-
-    // 2. VIAJE DE VUELTA: Validamos de nuevo en el servidor por si intentan hackear la petición HTTP
-    [HttpPost]
-    public async Task<IActionResult> Edit(int id, Evento evento)
-    {
-        if (id != evento.Id) return NotFound();
-
-        // Buscamos el registro real de la base de datos sin rastrearlo en memoria temporalmente
-        var eventoOriginal = await _context.Eventos.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
-        if (eventoOriginal == null) return NotFound();
-
-        // Doble verificación de seguridad
-        if (eventoOriginal.Creador != User.Identity.Name)
-        {
-            TempData["MensajeInfo"] = "Acceso denegado: No eres el propietario de este aviso.";
-            return RedirectToAction(nameof(Index));
-        }
-
-        if (ModelState.IsValid)
-        {
-            // Aseguramos que el creador original no se borre ni se modifique al actualizar
-            evento.Creador = eventoOriginal.Creador;
-
-            _context.Update(evento);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        return View(evento);
-    }
-
-    // ==========================================
-    // SECCIÓN: ELIMINAR EVENTO (PROTEGIDO)
-    // ==========================================
-
-    // 1. VIAJE DE IDA: Muestra la pantalla de confirmación si eres el dueño del aviso
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null) return NotFound();
-
-        var evento = await _context.Eventos.FirstOrDefaultAsync(m => m.Id == id);
-        if (evento == null) return NotFound();
-
-        // VALIDACIÓN DE SEGURIDAD: Si no eres el creador, te regresamos al tablero
-        if (evento.Creador != User.Identity.Name)
-        {
-            TempData["MensajeInfo"] = "No tienes permisos para eliminar este aviso. Solo el creador (" + evento.Creador + ") puede borrarlo.";
-            return RedirectToAction(nameof(Index));
-        }
-
-        return View(evento);
-    }
-
-    // 2. VIAJE DE VUELTA: Elimina el registro de la base de datos tras validar la sesión
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken] // Protección esencial contra ataques CSRF en formularios
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        var evento = await _context.Eventos.FindAsync(id);
-
-        if (evento == null) return NotFound();
-
-        // DOBLE VERIFICACIÓN DE SEGURIDAD: Evita hackeos directos por peticiones HTTP post
-        if (evento.Creador != User.Identity.Name)
-        {
-            TempData["MensajeInfo"] = "Acceso denegado: No eres el propietario de este aviso.";
-            return RedirectToAction(nameof(Index));
-        }
-
-        _context.Eventos.Remove(evento);
-        await _context.SaveChangesAsync();
-
-        TempData["MensajeExito"] = "El aviso se eliminó correctamente.";
-        return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> GuardarFirma(int eventoId)
     {
-        // 1. Extraemos el dato del gafete de la sesión (que gracias a tu AccesoController, sabemos que es el Nombre Completo)
+        // 1. Extraemos el dato del gafete de la sesión
         var nombreEnGafete = User.Identity.Name;
 
-        // 2. Buscamos al usuario comparando contra la columna correcta: NombreCompleto
+        // 2. Buscamos al usuario comparando contra la columna correcta
         var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.NombreCompleto == nombreEnGafete);
 
         if (usuario == null)
@@ -219,6 +196,7 @@ public class EventosController : Controller
         TempData["MensajeExito"] = "Tu firma se registró correctamente.";
         return RedirectToAction(nameof(Index));
     }
+
     // ==========================================
     // SECCIÓN: REPORTE DE FIRMAS (QUIÉN YA LEYÓ)
     // ==========================================
@@ -230,14 +208,13 @@ public class EventosController : Controller
         var evento = await _context.Eventos.FindAsync(id);
         if (evento == null) return NotFound();
 
-        // 2. Buscamos todas las firmas en la libreta (AcusesRecibo) que pertenezcan a este evento
-        // y traemos los datos del empleado (Usuario) para saber su nombre.
+        // 2. Buscamos todas las firmas en la libreta
         var firmas = await _context.AcusesRecibo
             .Include(a => a.Usuario)
             .Where(a => a.EventoId == id)
             .ToListAsync();
 
-        // 3. Guardamos el título del evento en una "charola" extra para mostrarlo en la pantalla
+        // 3. Guardamos el título del evento en una "charola" extra
         ViewBag.TituloEvento = evento.Titulo;
 
         return View(firmas);
