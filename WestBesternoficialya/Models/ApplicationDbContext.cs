@@ -15,4 +15,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Incidencia> Incidencias { get; set; }
     public DbSet<Producto> Inventario { get; set; }
     public DbSet<Reservacion> Reservaciones { get; set; }
+    public DbSet<FormatoReservacion> FormatosReservacion { get; set; }
+    public DbSet<NotificacionEvento> NotificacionesEventos { get; set; }
 }

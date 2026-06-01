@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WestBesternoficialya.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260601163626_AgregarFormatoReservacion")]
+    partial class AgregarFormatoReservacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -413,114 +416,6 @@ namespace WestBesternoficialya.Migrations
                     b.ToTable("Incidencias");
                 });
 
-            modelBuilder.Entity("WestBesternoficialya.Models.NotificacionEvento", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClienteEmpresa")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ConceptoServicio")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Cortesias")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Ejecutivo")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Estacionamiento")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("EventoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FechaEvento")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Folio")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("Garantia")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Horario")
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal?>("Iva")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<string>("Lugar")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Menus")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Montaje")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("NoDias")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoDias2")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoDias3")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoDias4")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoDias5")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoPax")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoPax2")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoPax3")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoPax4")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoPax5")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Observaciones")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Pago")
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal?>("Precio")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<int?>("Preparar")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("Servicio")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal?>("Subtotal")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal?>("Total")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventoId");
-
-                    b.ToTable("NotificacionesEventos");
-                });
-
             modelBuilder.Entity("WestBesternoficialya.Models.Producto", b =>
                 {
                     b.Property<int>("Id")
@@ -660,17 +555,6 @@ namespace WestBesternoficialya.Migrations
                         .IsRequired();
 
                     b.Navigation("Habitacion");
-                });
-
-            modelBuilder.Entity("WestBesternoficialya.Models.NotificacionEvento", b =>
-                {
-                    b.HasOne("WestBesternoficialya.Models.Evento", "Evento")
-                        .WithMany()
-                        .HasForeignKey("EventoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Evento");
                 });
 
             modelBuilder.Entity("WestBesternoficialya.Models.Producto", b =>

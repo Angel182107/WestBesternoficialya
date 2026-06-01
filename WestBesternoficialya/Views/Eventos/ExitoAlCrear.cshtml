@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Aviso Guardado";
+}
+
+<div class="container text-center mt-5">
+    <h1 class="text-success" style="font-size: 3rem;"><i class="fa-solid fa-circle-check"></i> ¡Formato Guardado con Éxito!</h1>
+    <p class="fs-4 mt-3 text-secondary">El Aviso de Grupo se ha registrado correctamente en la base de datos.</p>
+
+    <div class="mt-5 p-5 border border-2 border-primary rounded-4 shadow-sm bg-light">
+        <h2 class="text-primary mb-3">¿Deseas registrar los detalles de Alimentos y Salones?</h2>
+        <p class="fs-5">Puedes llenar la <strong>Notificación de Evento</strong> conectada a este grupo ahora mismo.</p>
+
+        <div class="d-flex justify-content-center gap-4 mt-5">
+            <a asp-controller="NotificacionesEventos" asp-action="Create" asp-route-eventoId="@ViewBag.EventoId" class="btn btn-success btn-lg fw-bold px-5 py-3 shadow">
+                <i class="fa-solid fa-utensils"></i> Sí, continuar a Notificación de Evento
+            </a>
+
+            <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-5 py-3 shadow-sm">
+                No por ahora, volver a Avisos
+            </a>
+        </div>
+    </div>
+</div>

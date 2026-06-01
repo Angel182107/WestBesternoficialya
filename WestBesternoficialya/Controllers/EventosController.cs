@@ -45,67 +45,87 @@ public class EventosController : Controller
 
             _context.Eventos.Add(evento);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            // EL TRUCO ESTÁ AQUÍ:
+            // En vez de mandarte al tablero, te mandamos a una pantalla de "Éxito"
+            // y le pasamos el ID del aviso que acabas de crear para que no se pierda.
+            return RedirectToAction("ExitoAlCrear", new { id = evento.Id });
         }
         return View(evento);
+    }
+
+    // ==========================================
+    // SECCIÓN: PANTALLA PUENTE (Botón de Continuar)
+    // ==========================================
+    [Authorize(Roles = "Administrador")]
+    public IActionResult ExitoAlCrear(int id)
+    {
+        // Guardamos el número de grupo para usarlo en el siguiente paso (La Notificación de Evento)
+        ViewBag.EventoId = id;
+        return View();
     }
 
     // ==========================================
     // SECCIÓN: VER DETALLES DEL AVISO / FORMATO
     // ==========================================
-    // GET: Eventos/Details/5
+    // ==========================================
+    // SECCIÓN: VER DETALLES DEL AVISO Y ALIMENTOS
+    // ==========================================
     public async Task<IActionResult> Details(int? id)
     {
-        // Si la URL no trae un ID, mandamos error 404
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
-        // Buscamos el evento en la base de datos usando el ID
+        // 1. Buscamos el Instructivo de Grupo (El Aviso Principal)
         var evento = await _context.Eventos.FirstOrDefaultAsync(m => m.Id == id);
 
-        // Si no encontramos el aviso en la base de datos, mandamos error 404
-        if (evento == null)
-        {
-            return NotFound();
-        }
+        if (evento == null) return NotFound();
 
-        // Si todo está bien, mandamos el evento a la vista Details.cshtml
+        // 2. Buscamos el formato de alimentos engrapado a este grupo
+        var alimentos = await _context.NotificacionesEventos.FirstOrDefaultAsync(n => n.EventoId == id);
+
+        // 3. Pasamos el formato de alimentos a la pantalla a través de la charola "ViewBag"
+        ViewBag.Alimentos = alimentos;
+
         return View(evento);
     }
 
     // ==========================================
-    // SECCIÓN: EDITAR EVENTO (PROTEGIDO)
+    // SECCIÓN: EDITAR EVENTOS Y ALIMENTOS
     // ==========================================
 
     // 1. VIAJE DE IDA: Mostrar la pantalla con los datos llenos
     [HttpGet]
-    [Authorize(Roles = "Administrador")] // <-- Nuevo candado: Solo Administradores editan
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null) return NotFound();
 
+        // Buscamos el Instructivo principal
         var evento = await _context.Eventos.FindAsync(id);
         if (evento == null) return NotFound();
+
+        // Buscamos el formato de Alimentos (si es que existe) y lo pasamos a la pantalla
+        ViewBag.Alimentos = await _context.NotificacionesEventos.FirstOrDefaultAsync(n => n.EventoId == id);
 
         return View(evento);
     }
 
     // 2. VIAJE DE VUELTA: Guardar los cambios nuevos
     [HttpPost]
-    [Authorize(Roles = "Administrador")] // <-- Nuevo candado de seguridad
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Edit(int id, Evento evento)
     {
         if (id != evento.Id) return NotFound();
 
+        // ESTAS LÍNEAS PERMITEN GUARDAR EL AVISO SIN QUE MARQUE ERROR
+        ModelState.Remove("AcusesRecibo");
+        ModelState.Remove("NotificacionesEventos");
+
         if (ModelState.IsValid)
         {
-            // Reemplazamos lo viejo por lo nuevo directamente
             _context.Update(evento);
             await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index)); // Lo regresamos a la lista
+            return RedirectToAction(nameof(Index));
         }
         return View(evento);
     }
