@@ -1,0 +1,128 @@
+﻿@model IEnumerable<WestBesternoficialya.Models.MaterialMantenimiento>
+
+<div class="container mt-4 mb-5">
+    <div class="row align-items-center mb-4 d-print-none">
+        <div class="col-md-6">
+            <h2 class="text-primary fw-bold">🛠️ Inventario de Mantenimiento</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <input type="text" id="buscadorMaterial" onkeyup="filtrarTabla()" class="form-control d-inline-block w-auto me-2" placeholder="🔍 Buscar material...">
+            
+            <a asp-action="Create" class="btn btn-success fw-bold shadow-sm">
+                <i class="bi bi-plus-circle"></i> Registrar Material
+            </a>
+            
+            <button onclick="descargarPDF('reporte-mantenimiento-imprimir', 'Inventario_Mantenimiento')" class="btn btn-danger fw-bold shadow-sm">
+                <i class="bi bi-file-earmark-pdf"></i> Descargar Reporte
+            </button>
+        </div>
+    </div>
+
+    <!-- REPORTE -->
+    <div id="reporte-mantenimiento-imprimir">
+        <div class="formato-impresion shadow-sm rounded-3" style="max-width: 850px; margin: auto; background-color: white; padding: 40px; border: 1px solid #ccc; font-family: Arial, sans-serif;">
+            
+            <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-2 border-dark pb-3">
+                <div>
+                    <h3 class="fw-bold text-dark mb-0">REPORTE DE INVENTARIO</h3>
+                    <p class="text-muted mb-0">Departamento de Mantenimiento - Hotel BW</p>
+                </div>
+                <div class="text-end">
+                    <p class="fw-bold mb-0 text-primary fs-5">HOTEL BW</p>
+                    <p class="text-secondary mb-0 small fw-bold">FECHA: @DateTime.Now.ToString("dd/MMM/yyyy")</p>
+                </div>
+            </div>
+
+            <table id="tablaMateriales" class="table table-bordered border-dark text-center align-middle mb-0" style="font-size: 0.95rem;">
+                <thead class="text-white" style="background-color: #084298;">
+                    <tr>
+                        <th>FECHA</th>
+                        <th style="text-align: left;">MARCA / MATERIAL</th>
+                        <th>MÁXIMO</th>
+                        <th>MÍNIMO</th>
+                        <th>EXISTENCIA</th>
+                        <th style="background-color: #dc3545;">COMPRAR</th>
+                        <!-- COLUMNA OCULTA PARA PDF -->
+                        <th class="ocultar-en-pdf"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="@(item.Existencia <= item.Minimo ? "bg-warning bg-opacity-10" : "bg-white")">
+                            <td class="border-dark">@item.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td class="text-start border-dark fw-bold text-uppercase">@item.Marca</td>
+                            <td class="border-dark">@item.Maximo</td>
+                            <td class="border-dark">@item.Minimo</td>
+                            <td class="border-dark fw-bold">@item.Existencia</td>
+                            <td class="border-dark fw-bold text-danger">@item.Comprar</td>
+                            <!-- BOTÓN CON CLASE PARA OCULTARLO EN PDF -->
+                            <td class="border-dark align-middle ocultar-en-pdf">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-fill"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* 
+       Ya no ponemos .ocultar-en-pdf { display: none !important; } aquí.
+       Así los botones siempre se verán en la pantalla.
+    */
+    
+    @@media print {
+        /* Esto oculta el botón solo si imprimes directamente con Ctrl+P */
+        .ocultar-en-pdf { display: none !important; }
+    }
+    
+    tr { page-break-inside: avoid !important; }
+    table { page-break-inside: auto !important; }
+    thead { display: table-header-group !important; }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+    function filtrarTabla() {
+        let input = document.getElementById("buscadorMaterial");
+        let filter = input.value.toUpperCase();
+        let table = document.getElementById("tablaMateriales");
+        let tr = table.getElementsByTagName("tr");
+        for (let i = 1; i < tr.length; i++) {
+            let td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                tr[i].style.display = td.textContent.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+    }
+
+    function descargarPDF(divId, nombreArchivo) {
+        var elemento = document.getElementById(divId);
+        
+        var opciones = {
+            margin: [0.5, 0.5, 0.5, 0.5],
+            filename: nombreArchivo + '.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+            html2canvas: { 
+                scale: 2, 
+                useCORS: true,
+                scrollY: 0,
+                // AQUÍ ESTÁ EL SECRETO: 
+                // Esto oculta los botones JUSTO cuando se está creando el PDF
+                onclone: function(clonedDoc) {
+                    var elements = clonedDoc.querySelectorAll('.ocultar-en-pdf');
+                    for (var i = 0; i < elements.length; i++) {
+                        elements[i].style.display = 'none';
+                    }
+                }
+            },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opciones).from(elemento).save();
+    }
+</script>

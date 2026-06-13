@@ -1,0 +1,63 @@
+﻿@model WestBesternoficialya.Models.MaterialMantenimiento
+
+@{
+    ViewData["Title"] = "Actualizar Inventario";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="card shadow-sm border-0 rounded-4 border-top border-primary border-5">
+                <div class="card-header bg-white text-center py-4">
+                    <h4 class="mb-0 fw-bold text-primary"><i class="bi bi-pencil-square me-2"></i> Actualizar Existencias</h4>
+                    <p class="text-muted mb-0 mt-1">Modifica el material ocupado o ajusta el stock</p>
+                </div>
+                
+                <div class="card-body p-4 bg-light">
+                    <form asp-action="Edit" method="post">
+                        <!-- Clave oculta obligatoria para que el sistema sepa qué está editando -->
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <div class="mb-4">
+                            <label asp-for="Fecha" class="form-label fw-bold text-secondary">Fecha de Actualización</label>
+                            <input asp-for="Fecha" type="date" class="form-control form-control-lg border-0 shadow-sm" required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Marca" class="form-label fw-bold text-secondary">Marca / Material</label>
+                            <input asp-for="Marca" class="form-control form-control-lg border-0 shadow-sm" required readonly title="El nombre del material no se puede cambiar" style="background-color: #e9ecef;" />
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <label asp-for="Maximo" class="form-label fw-bold text-primary">Máximo</label>
+                                <input asp-for="Maximo" type="number" min="0" class="form-control border-0 shadow-sm text-center fw-bold" required />
+                            </div>
+
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <label asp-for="Minimo" class="form-label fw-bold text-warning">Mínimo</label>
+                                <input asp-for="Minimo" type="number" min="0" class="form-control border-0 shadow-sm text-center fw-bold" required />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Existencia" class="form-label fw-bold text-success">Existencia Actual</label>
+                                <!-- Aquí es donde el empleado le resta si usó material -->
+                                <input asp-for="Existencia" type="number" min="0" class="form-control border-primary border-2 shadow text-center fw-bold fs-5" required autofocus />
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
+                            <a asp-action="Index" class="btn btn-secondary btn-lg shadow-sm px-4">Cancelar</a>
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm px-5 fw-bold">
+                                <i class="bi bi-arrow-repeat me-1"></i> Actualizar Stock
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

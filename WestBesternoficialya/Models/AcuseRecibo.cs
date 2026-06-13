@@ -8,6 +8,7 @@
         public DateTime FechaHoraFirma { get; set; } // Esta es tu "Firma Digital"
 
         public Evento Evento { get; set; }
+        public string? DepartamentoFirma { get; set; }
         public Usuario Usuario { get; set; }
     }
 }

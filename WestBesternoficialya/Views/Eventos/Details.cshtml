@@ -43,6 +43,9 @@
     var alimentos = ViewBag.Alimentos as WestBesternoficialya.Models.NotificacionEvento;
     var memo = ViewBag.Memorandum as WestBesternoficialya.Models.Memorandum;
     bool esMemorandum = memo != null;
+        
+    // Verificamos si el usuario pertenece a Ama de Llaves para ocultar tarifas
+    bool esAmaLlaves = User.IsInRole("Ama de llaves");
 }
 
 <div class="container mt-4 mb-5">
@@ -180,47 +183,47 @@
                             <tbody>
                                 <tr>
                                     <td class="text-center fw-bold">SENCILLA</td>
-                                    <td>@(Model.TarifaSencilla != null ? Model.TarifaSencilla?.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (Model.TarifaSencilla != null ? Model.TarifaSencilla?.ToString("C") : "$ -"))</td>
                                     <td>@(habS > 0 ? habS.ToString() : "-")</td>
                                     <td>@(paxS > 0 ? paxS.ToString() : "-")</td>
                                     <td>@(nocS > 0 ? nocS.ToString() : "-")</td>
-                                    <td>@(totS > 0 ? totS.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (totS > 0 ? totS.ToString("C") : "$ -"))</td>
                                     <td>@(string.IsNullOrEmpty(Model.PropinaSencilla) ? "-" : Model.PropinaSencilla)</td>
                                 </tr>
                                 <tr>
                                     <td class="text-center fw-bold">DOBLE</td>
-                                    <td>@(Model.TarifaDoble != null ? Model.TarifaDoble?.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (Model.TarifaDoble != null ? Model.TarifaDoble?.ToString("C") : "$ -"))</td>
                                     <td>@(habD > 0 ? habD.ToString() : "-")</td>
                                     <td>@(paxD > 0 ? paxD.ToString() : "-")</td>
                                     <td>@(nocD > 0 ? nocD.ToString() : "-")</td>
-                                    <td>@(totD > 0 ? totD.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (totD > 0 ? totD.ToString("C") : "$ -"))</td>
                                     <td>@(string.IsNullOrEmpty(Model.PropinaDoble) ? "-" : Model.PropinaDoble)</td>
                                 </tr>
                                 <tr>
                                     <td class="text-center fw-bold">TRIPLE</td>
-                                    <td>@(Model.TarifaTriple != null ? Model.TarifaTriple?.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (Model.TarifaTriple != null ? Model.TarifaTriple?.ToString("C") : "$ -"))</td>
                                     <td>@(habT > 0 ? habT.ToString() : "-")</td>
                                     <td>@(paxT > 0 ? paxT.ToString() : "-")</td>
                                     <td>@(nocT > 0 ? nocT.ToString() : "-")</td>
-                                    <td>@(totT > 0 ? totT.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (totT > 0 ? totT.ToString("C") : "$ -"))</td>
                                     <td>@(string.IsNullOrEmpty(Model.PropinaTriple) ? "-" : Model.PropinaTriple)</td>
                                 </tr>
                                 <tr>
                                     <td class="text-center fw-bold">CUÁDRUPLE</td>
-                                    <td>@(Model.TarifaCuadruple != null ? Model.TarifaCuadruple?.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (Model.TarifaCuadruple != null ? Model.TarifaCuadruple?.ToString("C") : "$ -"))</td>
                                     <td>@(habC > 0 ? habC.ToString() : "-")</td>
                                     <td>@(paxC > 0 ? paxC.ToString() : "-")</td>
                                     <td>@(nocC > 0 ? nocC.ToString() : "-")</td>
-                                    <td>@(totC > 0 ? totC.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (totC > 0 ? totC.ToString("C") : "$ -"))</td>
                                     <td>@(string.IsNullOrEmpty(Model.PropinaCuadruple) ? "-" : Model.PropinaCuadruple)</td>
                                 </tr>
                                 <tr>
                                     <td class="text-center fw-bold">CORTESÍA</td>
-                                    <td>@(Model.TarifaCortesia != null ? Model.TarifaCortesia?.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (Model.TarifaCortesia != null ? Model.TarifaCortesia?.ToString("C") : "$ -"))</td>
                                     <td>@(habCor > 0 ? habCor.ToString() : "-")</td>
                                     <td>@(paxCor > 0 ? paxCor.ToString() : "-")</td>
                                     <td>@(nocCor > 0 ? nocCor.ToString() : "-")</td>
-                                    <td>@(totCor > 0 ? totCor.ToString("C") : "$ -")</td>
+                                    <td>@(esAmaLlaves ? "$ ----" : (totCor > 0 ? totCor.ToString("C") : "$ -"))</td>
                                     <td>@(string.IsNullOrEmpty(Model.PropinaCortesia) ? "-" : Model.PropinaCortesia)</td>
                                 </tr>
                                 <tr class="fw-bold">
@@ -229,66 +232,68 @@
                                     <td class="border-dark">@(totalHabs > 0 ? totalHabs.ToString() : "-")</td>
                                     <td class="border-dark">@(totalPax > 0 ? totalPax.ToString() : "-")</td>
                                     <td class="text-center bg-light border-dark">HOSPEDAJE:</td>
-                                    <td class="text-end border-dark">@sumaHospedaje.ToString("C")</td>
+                                    <td class="text-end border-dark">@(esAmaLlaves ? "$ ----" : sumaHospedaje.ToString("C"))</td>
                                     <td class="text-end border-dark">-</td>
                                 </tr>
                                 <tr class="fw-bold">
                                     <td colspan="4" class="border-0"></td>
                                     <td class="text-center bg-light border-dark">ALIMENTOS:</td>
-                                    <td class="text-end border-dark">@totalAlimentos.ToString("C")</td>
+                                    <td class="text-end border-dark">@(esAmaLlaves ? "$ ----" : totalAlimentos.ToString("C"))</td>
                                     <td class="border-0"></td>
                                 </tr>
                                 <tr class="fw-bold">
                                     <td colspan="4" class="border-0"></td>
                                     <td class="text-center bg-light border-dark">PROPINAS:</td>
-                                    <td class="text-end border-dark">@totalPropinas.ToString("C")</td>
+                                    <td class="text-end border-dark">@(esAmaLlaves ? "$ ----" : totalPropinas.ToString("C"))</td>
                                     <td class="border-0"></td>
                                 </tr>
                                 <tr class="fw-bold">
                                     <td colspan="4" class="border-0"></td>
                                     <td class="text-center bg-light border-dark">TOTAL<br />EVENTO:</td>
-                                    <td class="text-end border-dark">@totalEvento.ToString("C")</td>
+                                    <td class="text-end border-dark">@(esAmaLlaves ? "$ ----" : totalEvento.ToString("C"))</td>
                                     <td class="border-0"></td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <table class="table table-bordered border-dark mt-3" style="font-size: 0.9rem;">
-                            <tr class="bg-light">
-                                <td colspan="2" class="fw-bold">NO. DE RESERVACIÓN: <span class="bg-white px-3 border border-dark ms-2">@Model.NumeroReservacion</span></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 25%;" class="bg-light"><strong>Cta. Maestra:</strong></td>
-                                <td>@Model.CuentaMaestra</td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light"><strong>Cta. Individual:</strong></td>
-                                <td>@Model.CuentasIndividuales</td>
-                            </tr>
-                        </table>
+                        @if (!esAmaLlaves)
+                        {
+                            <table class="table table-bordered border-dark mt-3 mb-0" style="font-size: 0.85rem;">
+                                <tr class="bg-light">
+                                    <td colspan="2" class="fw-bold">NO. DE RESERVACIÓN: <span class="bg-white px-3 border border-dark ms-2">@Model.NumeroReservacion</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 20%;" class="bg-light"><strong>Cta. Maestra:</strong></td>
+                                    <td style="width: 80%;">@Model.CuentaMaestra</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-light"><strong>Cta. Individual:</strong></td>
+                                    <td>@Model.CuentasIndividuales</td>
+                                </tr>
+                            </table>
+                        }
 
-                        <table class="table table-bordered border-dark mb-0" style="font-size: 0.85rem;">
-                            <tr>
-                                <td style="width: 20%; vertical-align: top;" class="bg-white">
-                                    <strong class="bg-light px-2 py-1 border border-dark d-inline-block mb-2">OBSERVACIONES:</strong><br />
-                                </td>
-                                <td style="width: 80%; background-color: #cfe2ff; color: #084298; text-align: center; vertical-align: middle;" class="fw-bold fs-4 px-4">
-                                    @(string.IsNullOrEmpty(Model.Observaciones) ? "\"BRINDAR EL SERVICIO QUE NOS CARACTERIZA\"" : $"\"{Model.Observaciones.ToUpper()}\"")
-                                </td>
-                            </tr>
-                        </table>
-
-                        <table class="table table-bordered border-dark mt-0 border-top-0" style="font-size: 0.85rem;">
-                            <tr><td style="width: 20%;" class="bg-light border-top-0"><strong>CORTESÍAS:</strong></td><td class="border-top-0">@Model.CortesiasExtras</td></tr>
-                            <tr><td class="bg-light"><strong>ANTICIPO:</strong></td><td>@Model.Anticipo</td></tr>
-                            <tr><td class="bg-light"><strong>FACTURAR A:</strong></td><td>@Model.FacturarA</td></tr>
-                            <tr><td class="bg-light"><strong>DOMICILIO:</strong></td><td>@Model.DomicilioFacturacion</td></tr>
-                            <tr><td class="bg-light"><strong>R.F.C.:</strong></td><td>@Model.RfcFacturacion</td></tr>
-                            <tr><td class="bg-light"><strong>TELÉFONO FACT.:</strong></td><td>@Model.TelefonoFacturacion</td></tr>
-                            <tr><td class="bg-light"><strong>TELÉFONO GUÍA:</strong></td><td>@Model.Guia</td></tr>
-                            <tr><td class="bg-light"><strong>DESPERTADOR:</strong></td><td>@Model.Despertador</td></tr>
-                            <tr><td class="bg-light"><strong>ALIMENTOS:</strong></td><td>@Model.NotasAlimentos</td></tr>
-                            <tr><td class="bg-light"><strong>EQUIPAJE:</strong></td><td>@Model.Equipaje</td></tr>
+                        <table class="table table-bordered border-dark @(esAmaLlaves ? "mt-3" : "mt-0 border-top-0")" style="font-size: 0.85rem;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 20%; vertical-align: middle;" class="bg-white text-center">
+                                        <strong class="bg-light px-2 py-1 border border-dark d-inline-block">OBSERVACIONES:</strong>
+                                    </td>
+                                    <td style="width: 80%; background-color: #cfe2ff; color: #084298; text-align: center; vertical-align: middle;" class="fw-bold fs-4 px-4">
+                                        @(string.IsNullOrEmpty(Model.Observaciones) ? "\"BRINDAR EL SERVICIO QUE NOS CARACTERIZA\"" : $"\"{Model.Observaciones.ToUpper()}\"")
+                                    </td>
+                                </tr>
+                                <tr><td class="bg-light"><strong>CORTESÍAS:</strong></td><td>@Model.CortesiasExtras</td></tr>
+                                <tr><td class="bg-light"><strong>ANTICIPO:</strong></td><td>@Model.Anticipo</td></tr>
+                                <tr><td class="bg-light"><strong>FACTURAR A:</strong></td><td>@Model.FacturarA</td></tr>
+                                <tr><td class="bg-light"><strong>DOMICILIO:</strong></td><td>@Model.DomicilioFacturacion</td></tr>
+                                <tr><td class="bg-light"><strong>R.F.C.:</strong></td><td>@Model.RfcFacturacion</td></tr>
+                                <tr><td class="bg-light"><strong>TELÉFONO FACT.:</strong></td><td>@Model.TelefonoFacturacion</td></tr>
+                                <tr><td class="bg-light"><strong>TELÉFONO GUÍA:</strong></td><td>@Model.Guia</td></tr>
+                                <tr><td class="bg-light"><strong>DESPERTADOR:</strong></td><td>@Model.Despertador</td></tr>
+                                <tr><td class="bg-light"><strong>ALIMENTOS:</strong></td><td>@Model.NotasAlimentos</td></tr>
+                                <tr><td class="bg-light"><strong>EQUIPAJE:</strong></td><td>@Model.Equipaje</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 }
@@ -599,9 +604,14 @@
     .bg-light {
         background-color: #f8f9fa !important;
     }
+    
+    /* ESTA REGLA EVITA QUE EL PDF CORTE LAS TABLAS O LAS FILAS A LA MITAD */
+    table, tr, td, th, tbody, thead, tfoot {
+        page-break-inside: avoid !important;
+    }
 </style>
 
-<!-- LIBRERÍA Y SCRIPT MÁGICO PARA DESCARGAR PDFs PERFECTOS -->
+@* LIBRERÍA Y SCRIPT MÁGICO PARA DESCARGAR PDFs PERFECTOS *@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
     function descargarPDF(divId, nombreArchivo) {
@@ -610,19 +620,24 @@
     // 1. Guardamos tu diseño original tal y como lo hiciste
     var estiloOriginal = elemento.getAttribute("style");
 
-    // 2. Encogemos el formato al tamaño exacto de una hoja física (Letter)
-    // También quitamos el borde gris para que el PDF parezca una hoja en blanco real
-    elemento.style.maxWidth = "780px";
+    // 2. Encogemos el formato y quitamos bordes visuales para el PDF
+    elemento.style.maxWidth = "800px";
     elemento.style.padding = "20px";
     elemento.style.margin = "0";
     elemento.style.border = "none";
 
     var opciones = {
-    margin:       0.3, // Margen de la hoja (en pulgadas)
+    margin:       [0.5, 0.5, 0.5, 0.5], // Margen: Arriba, Derecha, Abajo, Izquierda (Para que no quede pegado al borde del papel)
     filename:     nombreArchivo + '.pdf',
-    image:        { type: 'jpeg', quality: 1 },
-    html2canvas:  { scale: 2, useCORS: true }, // Escala 2 para que la letra no se vea borrosa
-    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    image:        { type: 'jpeg', quality: 0.98 },
+            
+    // scrollY: 0 es el truco para que nunca empiece a imprimir desde la mitad de la hoja
+    html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+            
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+            
+    // pagebreak le dice al sistema: "Prohibido romper las filas de la tabla (tr) si cambia de página"
+    pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     // 3. Tomamos la "foto", generamos el PDF y lo descargamos

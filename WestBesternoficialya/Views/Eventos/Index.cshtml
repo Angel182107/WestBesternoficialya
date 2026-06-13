@@ -1,8 +1,18 @@
 ﻿@model IEnumerable<WestBesternoficialya.Models.Evento>
 
 <div class="container mt-4">
-    <h2>Tablero de Anuncios y Eventos</h2>
-    <a asp-action="Create" class="btn btn-primary mb-3">Publicar Nuevo Aviso / Instructivo</a>
+    <!-- CABECERA MODIFICADA -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold">Tablero de Avisos</h2>
+        <div class="d-flex gap-2">
+            <a asp-controller="Mantenimiento" asp-action="Index" class="btn btn-outline-info fw-bold shadow-sm">
+                <i class="bi bi-tools"></i> Ver Reporte de Mantenimiento
+            </a>
+            <a asp-action="Create" class="btn btn-primary fw-bold shadow-sm">
+                <i class="bi bi-plus-circle"></i> Publicar Nuevo Aviso
+            </a>
+        </div>
+    </div>
     <hr />
 
     @if (TempData["MensajeInfo"] != null)
@@ -26,7 +36,6 @@
             <div class="col-md-4 mb-4">
                 <div class="card shadow h-100">
                     
-                    <!-- AQUÍ ESTABA EL ERROR: Ya quedó limpio solo con el título -->
                     <div class="card-header bg-dark text-white fw-bold">
                         Aviso del Hotel
                     </div>

@@ -8,7 +8,7 @@
     if (nombreUsuario.Contains("@"))
     {
         nombreUsuario = nombreUsuario.Split('@')[0];
-
+        
         // Le ponemos la primera letra en mayúscula para que se vea bonito
         if (nombreUsuario.Length > 0)
         {
@@ -43,7 +43,7 @@
 </style>
 
 <div class="container mt-4">
-
+    
     <div class="p-4 mb-5 shadow-sm fondo-degradado d-flex justify-content-between align-items-center">
         <div>
             <!-- Aquí aplicamos la variable con el nombre personalizado -->
@@ -55,21 +55,10 @@
         </div>
     </div>
 
+    <!-- TARJETAS DE INDICADORES (Ajustadas a col-md-4 para que las 3 ocupen todo el espacio) -->
     <div class="row mb-5">
-
-        <div class="col-md-3 mb-4">
-            <div class="card tarjeta-dashboard shadow-sm bg-white h-100 p-3 border-start border-danger border-5">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted text-uppercase small fw-bold mb-1">Limpieza Pendiente</p>
-                        <h2 class="fw-bold text-danger mb-0">@ViewBag.HabitacionesSucias</h2>
-                    </div>
-                    <i class="bi bi-droplet-half text-danger icono-gigante"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
+        
+        <div class="col-md-4 mb-4">
             <div class="card tarjeta-dashboard shadow-sm bg-white h-100 p-3 border-start border-warning border-5">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -81,7 +70,7 @@
             </div>
         </div>
 
-        <div class="col-md-3 mb-4">
+        <div class="col-md-4 mb-4">
             <div class="card tarjeta-dashboard shadow-sm bg-white h-100 p-3 border-start border-primary border-5">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -93,7 +82,7 @@
             </div>
         </div>
 
-        <div class="col-md-3 mb-4">
+        <div class="col-md-4 mb-4">
             <div class="card tarjeta-dashboard shadow-sm bg-white h-100 p-3 border-start border-success border-5">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -105,24 +94,5 @@
             </div>
         </div>
 
-    </div>
-
-    <h4 class="fw-bold mb-3"><i class="bi bi-lightning-charge-fill text-warning"></i> Accesos Directos</h4>
-    <div class="row">
-        <div class="col-md-4 mb-3">
-            <a asp-controller="Habitaciones" asp-action="Index" class="btn btn-outline-danger w-100 p-3 text-start fw-bold tarjeta-dashboard">
-                <i class="bi bi-arrow-right-circle me-2"></i> Revisar Cuartos Sucios
-            </a>
-        </div>
-        <div class="col-md-4 mb-3">
-            <a asp-controller="Eventos" asp-action="Create" class="btn btn-outline-success w-100 p-3 text-start fw-bold tarjeta-dashboard">
-                <i class="bi bi-plus-circle me-2"></i> Publicar Nuevo Aviso
-            </a>
-        </div>
-        <div class="col-md-4 mb-3">
-            <a asp-controller="Productos" asp-action="Create" class="btn btn-outline-primary w-100 p-3 text-start fw-bold tarjeta-dashboard">
-                <i class="bi bi-box-arrow-in-down me-2"></i> Registrar Suministros
-            </a>
-        </div>
     </div>
 </div>
