@@ -60,5 +60,6 @@ namespace WestBesternoficialya.Models
         public int? Preparar { get; set; }
         public int? Garantia { get; set; }
         public string? Menus { get; set; }
+        public string? NotasAdicionales { get; set; }
     }
 }

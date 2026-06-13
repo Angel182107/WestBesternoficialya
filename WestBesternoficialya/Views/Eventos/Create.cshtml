@@ -5,152 +5,277 @@
     <hr />
 
     <form asp-action="Create" method="post">
-        
-        <div class="card shadow-sm mb-3">
-            <div class="card-body row">
-                <div class="col-md-12 mb-3">
-                    <label asp-for="Titulo" class="form-label fw-bold">Título del Aviso <span class="text-danger">*</span></label>
-                    <input asp-for="Titulo" class="form-control" placeholder="Ej. Mantenimiento de elevadores o Llegada de Grupo" required />
-                </div>
-                <div class="col-md-12 mb-3">
-                    <label asp-for="DetallesLogistica" class="form-label fw-bold">Detalles del Aviso</label>
-                    <textarea asp-for="DetallesLogistica" class="form-control" rows="3" placeholder="Escribe aquí el comunicado general..."></textarea>
-                </div>
+
+        <div class="card shadow border-primary mb-4">
+            <div class="card-header bg-primary text-white"><h4 class="mb-0">Aviso General</h4></div>
+            <div class="card-body p-4">
+                <h5 class="text-primary mb-2"><i class="bi bi-megaphone"></i> Título del Aviso <span class="text-danger">*</span></h5>
+                <input asp-for="Titulo" class="form-control border-primary mb-4" placeholder="Ej. Mantenimiento de elevadores o Llegada de Grupo" required />
+
+                <h5 class="text-primary mb-2">Comunicado / Detalles</h5>
+                <textarea asp-for="DetallesLogistica" class="form-control border-primary" rows="4" placeholder="Escribe aquí el comunicado general..."></textarea>
             </div>
         </div>
 
-        <div class="mb-4">
-            <button type="button" class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#formatoInstructivoGrupo" aria-expanded="false" aria-controls="formatoInstructivoGrupo">
-                <i class="bi bi-file-earmark-spreadsheet"></i> ¿Es un Instructivo de Grupo? Presiona aquí para llenar el formato
+        <!-- BOTONES LADO A LADO -->
+        <div class="d-flex mb-4 gap-3">
+            <button type="button" class="btn btn-outline-info flex-fill fw-bold fs-5 shadow-sm py-3" data-bs-toggle="collapse" data-bs-target="#formatoInstructivoGrupo" aria-expanded="false">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Instructivo de Grupo
+            </button>
+            <button type="button" class="btn btn-outline-primary flex-fill fw-bold fs-5 shadow-sm py-3" data-bs-toggle="collapse" data-bs-target="#formatoMemorandum" aria-expanded="false">
+                <i class="bi bi-file-earmark-text"></i> Memorándum
             </button>
         </div>
 
+        <!-- ======================================================== -->
+        <!-- FORMATO: INSTRUCTIVO DE GRUPO (HOJA FÍSICA)              -->
+        <!-- ======================================================== -->
         <div class="collapse" id="formatoInstructivoGrupo">
             <div class="alert alert-info border-0 shadow-sm mb-3">
                 <i class="bi bi-info-circle-fill"></i> <strong>Formato Oficial:</strong> Completa los datos del grupo para que todos los departamentos estén enterados.
             </div>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-dark text-white fw-bold">1. Datos Generales del Grupo</div>
-                <div class="card-body row">
-                    <div class="col-md-2 mb-3"><label asp-for="Folio" class="form-label">Folio</label><input asp-for="Folio" class="form-control" /></div>
-                    <div class="col-md-2 mb-3"><label asp-for="Fecha" class="form-label">Fecha</label><input asp-for="Fecha" type="date" class="form-control" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="Grupo" class="form-label">Grupo</label><input asp-for="Grupo" class="form-control" placeholder="Nombre del Grupo" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="Agencia" class="form-label">Agencia o Cía</label><input asp-for="Agencia" class="form-control" /></div>
-                    <div class="col-md-2 mb-3"><label asp-for="TipoGrupo" class="form-label">Tipo de Grupo</label><input asp-for="TipoGrupo" class="form-control" /></div>
-                    
-                    <div class="col-md-5 mb-3"><label asp-for="Coordinador" class="form-label">Coordinador</label><input asp-for="Coordinador" class="form-control" /></div>
-                    <div class="col-md-5 mb-3"><label asp-for="Ejecutivo" class="form-label">Ejecutivo de Ventas</label><input asp-for="Ejecutivo" class="form-control" /></div>
-                    <div class="col-md-2 mb-3"><label asp-for="Ant" class="form-label">Ant (Arriba)</label><input asp-for="Ant" class="form-control" /></div>
-                    
-                    <div class="col-md-4 mb-3"><label asp-for="Telefono" class="form-label">Teléfono</label><input asp-for="Telefono" class="form-control" /></div>
-                    <div class="col-md-8 mb-3"><label asp-for="Direccion" class="form-label">Dirección</label><input asp-for="Direccion" class="form-control" /></div>
-                </div>
-            </div>
-
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-dark text-white fw-bold">2. Logística y Distribución de Cuartos</div>
-                <div class="card-body row">
-                    <div class="col-md-3 mb-3"><label asp-for="NumeroReservacion" class="form-label">No. de Reservación</label><input asp-for="NumeroReservacion" class="form-control" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="FechaEntrada" class="form-label">Fecha de Entrada</label><input asp-for="FechaEntrada" type="date" class="form-control" id="FechaEntrada" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="FechaSalida" class="form-label">Fecha de Salida</label><input asp-for="FechaSalida" type="date" class="form-control" id="FechaSalida" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="HoraLlegada" class="form-label">Hora de Llegada</label><input asp-for="HoraLlegada" type="time" class="form-control" /></div>
-
-                    <div class="col-md-12 mt-2"><label class="form-label fw-bold text-secondary">N° de Habitaciones, Tarifas, Noches y Propinas</label></div>
-                    
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label text-primary fw-bold mb-1">Sencillas</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Habs</span><input asp-for="Sencillas" type="number" class="form-control" id="Sencillas" />
-                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaSencilla" type="number" step="0.01" class="form-control" id="TarifaSencilla" />
-                            <span class="input-group-text">Noches</span><input asp-for="NochesSencilla" type="number" class="form-control" id="NochesSencilla" />
-                            <span class="input-group-text">Propina</span><input asp-for="PropinaSencilla" class="form-control" id="PropinaSencilla" placeholder="Ej. 10.50" />
-                        </div>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label text-primary fw-bold mb-1">Dobles</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Habs</span><input asp-for="Dobles" type="number" class="form-control" id="Dobles" />
-                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaDoble" type="number" step="0.01" class="form-control" id="TarifaDoble" />
-                            <span class="input-group-text">Noches</span><input asp-for="NochesDoble" type="number" class="form-control" id="NochesDoble" />
-                            <span class="input-group-text">Propina</span><input asp-for="PropinaDoble" class="form-control" id="PropinaDoble" />
-                        </div>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label text-primary fw-bold mb-1">Triples</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Habs</span><input asp-for="Triples" type="number" class="form-control" id="Triples" />
-                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaTriple" type="number" step="0.01" class="form-control" id="TarifaTriple" />
-                            <span class="input-group-text">Noches</span><input asp-for="NochesTriple" type="number" class="form-control" id="NochesTriple" />
-                            <span class="input-group-text">Propina</span><input asp-for="PropinaTriple" class="form-control" id="PropinaTriple" />
-                        </div>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label text-primary fw-bold mb-1">Cuádruples</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Habs</span><input asp-for="Cuadruples" type="number" class="form-control" id="Cuadruples" />
-                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaCuadruple" type="number" step="0.01" class="form-control" id="TarifaCuadruple" />
-                            <span class="input-group-text">Noches</span><input asp-for="NochesCuadruple" type="number" class="form-control" id="NochesCuadruple" />
-                            <span class="input-group-text">Propina</span><input asp-for="PropinaCuadruple" class="form-control" id="PropinaCuadruple" />
-                        </div>
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label class="form-label text-primary fw-bold mb-1">Cortesías</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Habs</span><input asp-for="CortesiasHabitacion" type="number" class="form-control" id="CortesiasHabitacion" />
-                            <span class="input-group-text">Tarifa $</span><input asp-for="TarifaCortesia" type="number" step="0.01" class="form-control" id="TarifaCortesia" />
-                            <span class="input-group-text">Noches</span><input asp-for="NochesCortesia" type="number" class="form-control" id="NochesCortesia" />
-                            <span class="input-group-text">Propina</span><input asp-for="PropinaCortesia" class="form-control" id="PropinaCortesia" />
-                        </div>
+            <div class="formato-impresion shadow-sm mb-4" style="max-width: 1000px; margin: auto; background-color: white; padding: 30px; border: 1px solid #ccc; font-family: Arial, sans-serif;">
+                <div class="p-3 mb-3 border border-dark" style="background-color: #e2e3e5;">
+                    <h2 class="text-center fw-bold mb-3" style="letter-spacing: 2px;">HOTEL SAN PEDRO</h2>
+                    <div class="d-flex justify-content-between fw-bold fs-5 align-items-center">
+                        <div>INSTRUCTIVO DE GRUPO</div>
+                        <div class="d-flex align-items-center">FOLIO <input asp-for="Folio" class="form-control form-control-sm ms-2 w-auto border-dark bg-white" /></div>
                     </div>
                 </div>
+
+                <table class="table table-bordered border-dark mt-0" style="font-size: 0.9rem;">
+                    <tr>
+                        <td style="width: 15%;" class="bg-light"><strong>Fecha:</strong></td>
+                        <td style="width: 35%;"><input asp-for="Fecha" type="date" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                        <td style="width: 15%;" class="bg-light"><strong>Grupo:</strong></td>
+                        <td style="width: 35%;"><input asp-for="Grupo" class="form-control form-control-sm border-0 bg-transparent fw-bold text-uppercase w-100" placeholder="Nombre del grupo..." /></td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Agencia:</strong></td>
+                        <td><input asp-for="Agencia" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                        <td class="bg-light"><strong>Tipo Grupo:</strong></td>
+                        <td><input asp-for="TipoGrupo" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Dirección:</strong></td>
+                        <td><input asp-for="Direccion" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                        <td class="bg-light"><strong>Teléfono:</strong></td>
+                        <td><input asp-for="Telefono" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Coordinador:</strong></td>
+                        <td><input asp-for="Coordinador" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                        <td class="bg-light"><strong>R.F.C.:</strong></td>
+                        <td><input asp-for="Rfc" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Ejecutivo:</strong></td>
+                        <td><input asp-for="Ejecutivo" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                        <td class="bg-light"><strong>Ant:</strong></td>
+                        <td><input asp-for="Ant" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Fecha Entrada:</strong></td>
+                        <td><input asp-for="FechaEntrada" type="date" class="form-control form-control-sm border-0 bg-transparent fw-bold w-100" id="FechaEntrada" /></td>
+                        <td class="bg-light"><strong>Fecha Salida:</strong></td>
+                        <td><input asp-for="FechaSalida" type="date" class="form-control form-control-sm border-0 bg-transparent fw-bold w-100" id="FechaSalida" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td class="bg-light"><strong>Hora Llegada:</strong></td>
+                        <td><input asp-for="HoraLlegada" type="time" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                    </tr>
+                </table>
+
+                <table class="table table-bordered border-dark text-center mb-0" style="font-size: 0.85rem;">
+                    <thead class="bg-light">
+                        <tr class="align-middle">
+                            <th style="width: 15%;"></th>
+                            <th style="width: 15%;">TARIFAS</th>
+                            <th style="width: 14%;">N° DE HAB</th>
+                            <th style="width: 10%;"></th>
+                            <th style="width: 10%;">NOCHES</th>
+                            <th style="width: 20%;">TOTAL (Finanzas)</th>
+                            <th style="width: 16%;">PROPINA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center fw-bold">SENCILLA</td>
+                            <td><input asp-for="TarifaSencilla" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
+                            <td><input asp-for="Sencillas" type="number" class="form-control form-control-sm border-0 text-center" id="Sencillas" /></td>
+                            <td></td>
+                            <td><input asp-for="NochesSencilla" type="number" class="form-control form-control-sm border-0 text-center" id="NochesSencilla" /></td>
+                            <td><input asp-for="CostoHospedaje" placeholder="Auto" class="form-control form-control-sm border-0 text-center" id="CostoHospedaje" /></td>
+                            <td><input asp-for="PropinaSencilla" class="form-control form-control-sm border-0 text-center" id="PropinaSencilla" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">DOBLE</td>
+                            <td><input asp-for="TarifaDoble" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
+                            <td><input asp-for="Dobles" type="number" class="form-control form-control-sm border-0 text-center" id="Dobles" /></td>
+                            <td></td>
+                            <td><input asp-for="NochesDoble" type="number" class="form-control form-control-sm border-0 text-center" id="NochesDoble" /></td>
+                            <td><input asp-for="CostoAlimentos" placeholder="Costo Alimentos" class="form-control form-control-sm border-0 text-center" id="CostoAlimentos" /></td>
+                            <td><input asp-for="PropinaDoble" class="form-control form-control-sm border-0 text-center" id="PropinaDoble" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">TRIPLE</td>
+                            <td><input asp-for="TarifaTriple" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
+                            <td><input asp-for="Triples" type="number" class="form-control form-control-sm border-0 text-center" id="Triples" /></td>
+                            <td></td>
+                            <td><input asp-for="NochesTriple" type="number" class="form-control form-control-sm border-0 text-center" id="NochesTriple" /></td>
+                            <td><input asp-for="CostoPropinas" placeholder="Auto" class="form-control form-control-sm border-0 text-center" id="CostoPropinas" /></td>
+                            <td><input asp-for="PropinaTriple" class="form-control form-control-sm border-0 text-center" id="PropinaTriple" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">CUÁDRUPLE</td>
+                            <td><input asp-for="TarifaCuadruple" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
+                            <td><input asp-for="Cuadruples" type="number" class="form-control form-control-sm border-0 text-center" id="Cuadruples" /></td>
+                            <td></td>
+                            <td><input asp-for="NochesCuadruple" type="number" class="form-control form-control-sm border-0 text-center" id="NochesCuadruple" /></td>
+                            <td class="bg-light border-dark"><strong>TOTAL EVENTO:</strong></td>
+                            <td><input asp-for="PropinaCuadruple" class="form-control form-control-sm border-0 text-center" id="PropinaCuadruple" /></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center fw-bold">CORTESÍA</td>
+                            <td><input asp-for="TarifaCortesia" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
+                            <td><input asp-for="CortesiasHabitacion" type="number" class="form-control form-control-sm border-0 text-center" id="CortesiasHabitacion" /></td>
+                            <td></td>
+                            <td><input asp-for="NochesCortesia" type="number" class="form-control form-control-sm border-0 text-center" id="NochesCortesia" /></td>
+                            <td class="border-dark"><input asp-for="TotalEvento" class="form-control form-control-sm border-0 text-center fw-bold" id="TotalEvento" /></td>
+                            <td><input asp-for="PropinaCortesia" class="form-control form-control-sm border-0 text-center" id="PropinaCortesia" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered border-dark mt-3" style="font-size: 0.9rem;">
+                    <tr class="bg-light">
+                        <td colspan="2" class="fw-bold d-flex align-items-center">NO. DE RESERVACIÓN: <input asp-for="NumeroReservacion" class="form-control form-control-sm ms-2 w-auto border-dark bg-white" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 25%;" class="bg-light"><strong>Cta. Maestra:</strong></td>
+                        <td><input asp-for="CuentaMaestra" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Cta. Individual:</strong></td>
+                        <td><input asp-for="CuentasIndividuales" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
+                    </tr>
+                </table>
+
+                <table class="table table-bordered border-dark mb-0" style="font-size: 0.85rem;">
+                    <tr>
+                        <td style="width: 20%; vertical-align: top;" class="bg-white">
+                            <strong class="bg-light px-2 py-1 border border-dark d-inline-block mb-2">OBSERVACIONES:</strong><br />
+                        </td>
+                        <td style="width: 80%; background-color: #cfe2ff;" class="p-2">
+                            <textarea asp-for="Observaciones" class="form-control border-0 bg-transparent fw-bold" rows="3" style="color: #084298;" placeholder="Ej. BRINDAR EL SERVICIO QUE NOS CARACTERIZA"></textarea>
+                        </td>
+                    </tr>
+                </table>
+
+                <table class="table table-bordered border-dark mt-0 border-top-0" style="font-size: 0.85rem;">
+                    <tr><td style="width: 20%;" class="bg-light border-top-0"><strong>CORTESÍAS:</strong></td><td class="border-top-0"><input asp-for="CortesiasExtras" class="form-control form-control-sm border-0 w-100" /></td></tr>
+                    <tr><td class="bg-light"><strong>ANTICIPO:</strong></td><td><input asp-for="Anticipo" class="form-control form-control-sm border-0 w-100" placeholder="Ej. Se pasan comprobantes un día antes" /></td></tr>
+                    <tr><td class="bg-light"><strong>FACTURAR A:</strong></td><td><input asp-for="FacturarA" class="form-control form-control-sm border-0 w-100" /></td></tr>
+                    <tr><td class="bg-light"><strong>DOMICILIO:</strong></td><td><input asp-for="DomicilioFacturacion" class="form-control form-control-sm border-0 w-100" /></td></tr>
+                    <tr><td class="bg-light"><strong>R.F.C.:</strong></td><td><input asp-for="RfcFacturacion" class="form-control form-control-sm border-0 w-100" /></td></tr>
+                    <tr><td class="bg-light"><strong>TELÉFONO FACT.:</strong></td><td><input asp-for="TelefonoFacturacion" class="form-control form-control-sm border-0 w-100" /></td></tr>
+                    <tr><td class="bg-light"><strong>TELÉFONO GUÍA:</strong></td><td><input asp-for="Guia" class="form-control form-control-sm border-0 w-100" /></td></tr>
+                    <tr><td class="bg-light"><strong>DESPERTADOR:</strong></td><td><input asp-for="Despertador" class="form-control form-control-sm border-0 w-100" /></td></tr>
+                    <tr><td class="bg-light"><strong>ALIMENTOS (Notas):</strong></td><td><input asp-for="NotasAlimentos" class="form-control form-control-sm border-0 w-100" /></td></tr>
+                    <tr><td class="bg-light"><strong>EQUIPAJE:</strong></td><td><input asp-for="Equipaje" class="form-control form-control-sm border-0 w-100" /></td></tr>
+                </table>
             </div>
+        </div>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-dark text-white fw-bold">3. Cuentas y Facturación</div>
-                <div class="card-body row">
-                    <div class="col-md-3 mb-3"><label asp-for="CostoHospedaje" class="form-label">Hospedaje $</label><input asp-for="CostoHospedaje" type="number" step="0.01" class="form-control" id="CostoHospedaje" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="CostoAlimentos" class="form-label">Alimentos $</label><input asp-for="CostoAlimentos" type="number" step="0.01" class="form-control" id="CostoAlimentos" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="CostoPropinas" class="form-label">Propinas $</label><input asp-for="CostoPropinas" type="number" step="0.01" class="form-control" id="CostoPropinas" /></div>
-                    <div class="col-md-3 mb-3"><label asp-for="TotalEvento" class="form-label fw-bold text-success">Total Evento $</label><input asp-for="TotalEvento" type="number" step="0.01" class="form-control border-success" id="TotalEvento" /></div>
-                    
-                    <div class="col-md-6 mb-3"><label asp-for="CuentaMaestra" class="form-label">Cta. Maestra</label><input asp-for="CuentaMaestra" class="form-control" placeholder="Ej. Habitaciones e impuestos" /></div>
-                    <div class="col-md-6 mb-3"><label asp-for="CuentasIndividuales" class="form-label">Cta. Individual</label><input asp-for="CuentasIndividuales" class="form-control" placeholder="Ej. Extras pagados por huésped" /></div>
+        <!-- ======================================================== -->
+        <!-- FORMATO: MEMORÁNDUM (HOJA FÍSICA)                        -->
+        <!-- ======================================================== -->
+        <div class="collapse" id="formatoMemorandum">
+            <div class="formato-impresion shadow-sm mb-4" style="max-width: 800px; margin: auto; background-color: white; padding: 40px; border: 1px solid #ccc; font-family: Arial, sans-serif;">
 
-                    <div class="col-md-12"><hr /></div>
-                    
-                    <div class="col-md-4 mb-3"><label asp-for="FacturarA" class="form-label">Facturar a</label><input asp-for="FacturarA" class="form-control" /></div>
-                    <div class="col-md-4 mb-3"><label asp-for="RfcFacturacion" class="form-label">RFC</label><input asp-for="RfcFacturacion" class="form-control" /></div>
-                    <div class="col-md-4 mb-3"><label asp-for="TelefonoFacturacion" class="form-label">Teléfono</label><input asp-for="TelefonoFacturacion" class="form-control" /></div>
-                    <div class="col-md-12 mb-3"><label asp-for="DomicilioFacturacion" class="form-label">Domicilio</label><input asp-for="DomicilioFacturacion" class="form-control" /></div>
+                <h3 class="text-center fw-bold mb-4" style="letter-spacing: 5px;">M E M O R A N D U M</h3>
+
+                <table class="table table-borderless mb-4" style="line-height: 1.2;">
+                    <tr><td style="width: 80px;" class="fw-bold p-1">Para:</td><td class="p-1"><input asp-for="Memorandum.Para" class="form-control form-control-sm border-0 bg-light w-100" value="RECEPCIÓN, RESTAURANTE, AMA DE LLAVES, BELLBOY, COCINA, MANTENIMIENTO." /></td></tr>
+                    <tr><td class="fw-bold p-1">De:</td><td class="p-1"><input asp-for="Memorandum.De" class="form-control form-control-sm border-0 bg-light w-100" /></td></tr>
+                    <tr><td class="fw-bold p-1">Fecha:</td><td class="p-1"><input asp-for="Memorandum.FechaMemorandum" type="date" class="form-control form-control-sm border-0 bg-light w-100" /></td></tr>
+                    <tr><td class="fw-bold p-1">Asunto:</td><td class="p-1"><input asp-for="Memorandum.Asunto" class="form-control form-control-sm border-0 bg-light w-100 fw-bold" /></td></tr>
+                </table>
+
+                <div class="mb-4">
+                    <textarea asp-for="Memorandum.Saludo" class="form-control border-0 bg-light w-100 text-justify" rows="3" style="font-size: 0.95rem;">POR MEDIO DE LA PRESENTE LES ENVIO UN CORDIAL SALUDO, ASI MISMO LES INFORMO DE LA RESERVA DE HABITACIONES POR PARTE DE LA SECRETARIA DE CULTURA. CON LAS SIGUIENTES CARACTERISTICAS</textarea>
                 </div>
-            </div>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-dark text-white fw-bold">4. Requerimientos de Operación</div>
-                <div class="card-body row">
-                    <div class="col-md-12 mb-3"><label asp-for="Anticipo" class="form-label">Anticipo (Abajo)</label><input asp-for="Anticipo" class="form-control" placeholder="Ej. Se pasan comprobantes un día antes" /></div>
-                    
-                    <div class="col-md-6 mb-3"><label asp-for="Guia" class="form-label">Teléfono Guía</label><input asp-for="Guia" class="form-control" /></div>
-                    <div class="col-md-6 mb-3"><label asp-for="Despertador" class="form-label">Despertador</label><input asp-for="Despertador" class="form-control" /></div>
-                    <div class="col-md-12 mb-3"><label asp-for="Equipaje" class="form-label">Equipaje</label><input asp-for="Equipaje" class="form-control" /></div>
-                    <div class="col-md-12 mb-3"><label asp-for="NotasAlimentos" class="form-label">Alimentos</label><textarea asp-for="NotasAlimentos" class="form-control" rows="2"></textarea></div>
-                    <div class="col-md-12 mb-3"><label asp-for="CortesiasExtras" class="form-label">Cortesías</label><textarea asp-for="CortesiasExtras" class="form-control" rows="2"></textarea></div>
-                    
-                    <div class="col-md-12 mb-3">
-                        <label asp-for="Observaciones" class="form-label fw-bold text-primary">Observaciones (Aparecerá en el Banner Azul)</label>
-                        <textarea asp-for="Observaciones" class="form-control border-primary" rows="2" placeholder="Ej. BRINDAR EL SERVICIO QUE NOS CARACTERIZA"></textarea>
-                    </div>
+                <table class="table table-borderless mb-4 fw-bold" style="line-height: 1.2;">
+                    <tr><td style="width: 80px;" class="p-1">IN:</td><td class="p-1"><input asp-for="Memorandum.CheckIn" type="date" class="form-control form-control-sm border-0 bg-light w-50" /></td></tr>
+                    <tr><td class="p-1">OUT:</td><td class="p-1"><input asp-for="Memorandum.CheckOut" type="date" class="form-control form-control-sm border-0 bg-light w-50" /></td></tr>
+                    <tr><td class="p-1">GARANTIA:</td><td class="p-1"><input asp-for="Memorandum.Garantia" class="form-control form-control-sm border-0 bg-light w-100" /></td></tr>
+                    <tr><td class="p-1 pt-3">Nombre:</td><td class="p-1 pt-3"><input asp-for="Memorandum.NombreHuesped" class="form-control form-control-sm border-0 bg-light w-100" value="POR CONFIRMAR" /></td></tr>
+                </table>
+
+                <table class="table table-bordered border-dark text-center align-middle mb-3" style="font-size: 0.85rem;">
+                    <thead class="fw-bold bg-light">
+                        <tr>
+                            <th style="width: 30%; padding: 5px;">TIPO DE HABITACION</th>
+                            <th style="width: 15%; padding: 5px;">CANTIDAD</th>
+                            <th style="width: 15%; padding: 5px;">NOCHES</th>
+                            <th style="width: 20%; padding: 5px;">COSTO</th>
+                            <th style="width: 20%; padding: 5px;">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 1; i <= 4; i++)
+                        {
+                            <tr>
+                                <td class="p-1"><input name="Memorandum.Concepto@(i)" class="form-control form-control-sm border-0 bg-transparent text-center fw-bold" /></td>
+                                <td class="p-1"><input name="Memorandum.Cantidad@(i)" id="mCant@(i)" class="form-control form-control-sm border-0 bg-transparent text-center memo-calc" /></td>
+                                <td class="p-1"><input name="Memorandum.Noches@(i)" id="mNoc@(i)" class="form-control form-control-sm border-0 bg-transparent text-center memo-calc" /></td>
+                                <td class="p-1"><input name="Memorandum.Costo@(i)" id="mCos@(i)" type="number" step="0.01" class="form-control form-control-sm border-0 bg-transparent text-center memo-calc" /></td>
+                                <td class="p-1"><input name="Memorandum.Total@(i)" id="mTot@(i)" type="number" step="0.01" class="form-control form-control-sm border-0 bg-transparent text-center" readonly /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="text-end fw-bold mb-5 fs-5 d-flex justify-content-end align-items-center">
+                    TOTAL $<input asp-for="Memorandum.GranTotal" id="mGranTotal" class="form-control form-control-sm border-0 bg-transparent fw-bold text-end w-25 ms-2 fs-5" readonly />
+                </div>
+
+                <div class="mb-5" style="font-size: 0.9rem;">
+                    <div class="d-flex mb-3 align-items-start"><span class="fw-bold me-2">RECEPCION:</span> <input asp-for="Memorandum.InstruccionesRecepcion" class="form-control form-control-sm border-0 bg-light flex-grow-1" /></div>
+                    <div class="d-flex mb-3 align-items-start"><span class="fw-bold me-2">RESTAURANTE:</span> <textarea asp-for="Memorandum.InstruccionesRestaurante" class="form-control form-control-sm border-0 bg-light flex-grow-1" rows="2"></textarea></div>
+                    <div class="d-flex mb-3 align-items-start"><span class="fw-bold me-2">AMA DE LLAVES/MTTO:</span> <input asp-for="Memorandum.InstruccionesAmaLlaves" class="form-control form-control-sm border-0 bg-light flex-grow-1" /></div>
+                </div>
+
+                <div class="text-center fw-bold mt-4">
+                    <input asp-for="Memorandum.NotaFinal" class="form-control form-control-sm border-0 bg-light text-center w-100" value="CUALQUIER SERVICIO EXTRA, DEBERA SER CUBIERTO POR LA PERSONA QUE LO SOLICITA EN EL MOMENTO." />
                 </div>
             </div>
         </div>
 
-        <div class="d-flex justify-content-end mb-4">
-            <a asp-action="Index" class="btn btn-secondary me-2">Cancelar</a>
-            <button type="submit" class="btn btn-success btn-lg"><i class="bi bi-megaphone"></i> Publicar Aviso</button>
+        <div class="d-flex justify-content-end mb-4 mt-3">
+            <a asp-action="Index" class="btn btn-secondary btn-lg me-2 shadow-sm">Cancelar</a>
+            <button type="submit" class="btn btn-success btn-lg shadow-sm"><i class="bi bi-megaphone"></i> Guardar y Publicar</button>
         </div>
     </form>
 </div>
+
+<style>
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+
+    input.border-0, textarea.border-0 {
+        background-color: #fcfcfc !important;
+        outline: none;
+    }
+
+        input.border-0:focus, textarea.border-0:focus {
+            background-color: #e9ecef !important;
+        }
+</style>
 
 @section Scripts {
     <script>
@@ -163,7 +288,7 @@
         function calcularTotales() {
             let getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
             let getTexto = (id) => document.getElementById(id).value || "";
-            
+
             let habS = getVal('Sencillas'), tarS = getVal('TarifaSencilla'), nocS = getVal('NochesSencilla');
             let habD = getVal('Dobles'), tarD = getVal('TarifaDoble'), nocD = getVal('NochesDoble');
             let habT = getVal('Triples'), tarT = getVal('TarifaTriple'), nocT = getVal('NochesTriple');
@@ -176,7 +301,7 @@
                                  (habT * tarT * nocT) +
                                  (habC * tarC * nocC) +
                                  (habCor * tarCor * nocCor);
-                                 
+
             document.getElementById('CostoHospedaje').value = totalHospedaje.toFixed(2);
 
             // Propinas automáticas
@@ -185,19 +310,46 @@
                                extraerNumero(getTexto('PropinaTriple')) +
                                extraerNumero(getTexto('PropinaCuadruple')) +
                                extraerNumero(getTexto('PropinaCortesia'));
-            
+
             document.getElementById('CostoPropinas').value = sumaPropinas.toFixed(2);
 
             // Gran Total del Evento
             let alimentos = getVal('CostoAlimentos');
             let propinasFinal = getVal('CostoPropinas');
-            
+
             let granTotal = totalHospedaje + alimentos + propinasFinal;
             document.getElementById('TotalEvento').value = granTotal.toFixed(2);
         }
 
-        document.querySelectorAll('input, textarea').forEach(input => {
+        // 1. Listeners para el Instructivo de Grupo (Omitimos los memo-calc para que no crucen datos)
+        document.querySelectorAll('input:not(.memo-calc), textarea').forEach(input => {
             input.addEventListener('input', calcularTotales);
+        });
+
+        // 2. Listeners para el nuevo Memorándum
+        document.querySelectorAll('.memo-calc').forEach(input => {
+            input.addEventListener('input', function() {
+                let granTotalMemo = 0;
+                for(let i = 1; i <= 4; i++) {
+                    let cantTexto = document.getElementById('mCant'+i).value;
+                    let nocTexto = document.getElementById('mNoc'+i).value;
+
+                    let cant = extraerNumero(cantTexto);
+                    let noc = extraerNumero(nocTexto);
+                    let cos = parseFloat(document.getElementById('mCos'+i).value) || 0;
+
+                    // Lógica para que las "Noches" en blanco valgan 1 (ej: 5 comidas x 1 noche x $285)
+                    let multiplicadorNoches = noc;
+                    if (noc === 0 && nocTexto.trim() === "") {
+                        multiplicadorNoches = 1;
+                    }
+
+                    let totalFila = cant * multiplicadorNoches * cos;
+                    document.getElementById('mTot'+i).value = totalFila > 0 ? totalFila.toFixed(2) : '';
+                    granTotalMemo += totalFila;
+                }
+                document.getElementById('mGranTotal').value = granTotalMemo.toFixed(2);
+            });
         });
     </script>
 }

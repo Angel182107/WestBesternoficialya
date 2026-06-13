@@ -1,5 +1,20 @@
 ﻿@{
     ViewData["Title"] = "Centro de Mando";
+
+    // 1. Obtenemos el nombre del usuario conectado
+    string nombreUsuario = User.Identity?.Name ?? "Equipo";
+
+    // 2. TRUCO: Si inician sesión con correo (ej. admin@hotel.com), cortamos el texto
+    if (nombreUsuario.Contains("@"))
+    {
+        nombreUsuario = nombreUsuario.Split('@')[0];
+
+        // Le ponemos la primera letra en mayúscula para que se vea bonito
+        if (nombreUsuario.Length > 0)
+        {
+            nombreUsuario = char.ToUpper(nombreUsuario[0]) + nombreUsuario.Substring(1);
+        }
+    }
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -28,19 +43,20 @@
 </style>
 
 <div class="container mt-4">
-    
+
     <div class="p-4 mb-5 shadow-sm fondo-degradado d-flex justify-content-between align-items-center">
         <div>
-            <h2 class="fw-bold text-dark mb-1">¡Hola, Equipo San Pedro! 👋</h2>
+            <!-- Aquí aplicamos la variable con el nombre personalizado -->
+            <h2 class="fw-bold text-dark mb-1">¡Bienvenido, @nombreUsuario! 👋</h2>
             <p class="text-muted mb-0">Resumen en tiempo real de la operación de tu hotel.</p>
         </div>
         <div class="text-end d-none d-md-block">
-            <p class="mb-0 text-muted fw-bold"><i class="bi bi-calendar3"></i> @DateTime.Now.ToString("dddd, dd MMMM yyyy")</p>
+            <p class="mb-0 text-muted fw-bold"><i class="bi bi-calendar3"></i> @DateTime.Now.ToString("dddd, dd MMMM yyyy", new System.Globalization.CultureInfo("es-ES"))</p>
         </div>
     </div>
 
     <div class="row mb-5">
-        
+
         <div class="col-md-3 mb-4">
             <div class="card tarjeta-dashboard shadow-sm bg-white h-100 p-3 border-start border-danger border-5">
                 <div class="d-flex justify-content-between align-items-center">
@@ -109,5 +125,4 @@
             </a>
         </div>
     </div>
-
 </div>

@@ -39,8 +39,10 @@
     decimal totalPropinas = Model.CostoPropinas ?? 0;
     decimal totalEvento = Model.TotalEvento ?? (sumaHospedaje + totalAlimentos + totalPropinas);
 
-    // Extraemos el segundo formato de la charola
+    // Extraemos los formatos adicionales de la charola
     var alimentos = ViewBag.Alimentos as WestBesternoficialya.Models.NotificacionEvento;
+    var memo = ViewBag.Memorandum as WestBesternoficialya.Models.Memorandum;
+    bool esMemorandum = memo != null;
 }
 
 <div class="container mt-4 mb-5">
@@ -54,6 +56,7 @@
         </div>
     </div>
 
+    <!-- PESTAÑAS DE NAVEGACIÓN -->
     <ul class="nav nav-tabs mb-4" id="formatosTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active fw-bold fs-5 text-dark" id="instructivo-tab" data-bs-toggle="tab" data-bs-target="#instructivo-panel" type="button" role="tab">
@@ -65,10 +68,19 @@
                 🍽️ 2. Notificación de Evento
             </button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold fs-5 text-dark" id="memorandum-tab" data-bs-toggle="tab" data-bs-target="#memorandum-panel" type="button" role="tab">
+                📝 3. Memorándum
+            </button>
+        </li>
     </ul>
 
+    <!-- CONTENIDO DE LAS PESTAÑAS -->
     <div class="tab-content" id="formatosTabContent">
 
+        <!-- ============================================== -->
+        <!-- PESTAÑA 1: INSTRUCTIVO DE GRUPO                -->
+        <!-- ============================================== -->
         <div class="tab-pane fade show active" id="instructivo-panel" role="tabpanel">
             <div class="text-end mb-3">
                 @if (esInstructivoGrupo)
@@ -283,6 +295,9 @@
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- PESTAÑA 2: NOTIFICACIÓN DE EVENTO (ALIMENTOS)  -->
+        <!-- ============================================== -->
         <div class="tab-pane fade" id="alimentos-panel" role="tabpanel">
             @if (alimentos != null)
             {
@@ -332,8 +347,7 @@
                                 <tr>
                                     <td class="fw-bold fs-5">@alimentos.ConceptoServicio</td>
                                     <td>
-                                        <div>@alimentos.FechaEvento</div>
-                                        <div>@alimentos.Horario</div>
+                                        <div class="fw-bold fs-5">@alimentos.Horario</div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -349,87 +363,120 @@
 
                         <div class="fw-bold text-center border border-dark border-bottom-0 mt-3" style="background-color: #d1d1d1;">COSTOS:</div>
                         <table class="table table-bordered border-dark text-center mb-0" style="font-size: 0.85rem;">
-                            <thead>
-                                <tr style="background-color: #ffff00;">
+                            <thead style="background-color: #ffff00;">
+                                <tr>
                                     <th style="width: 15%;" class="bg-light">CONCEPTO:</th>
-                                    <th style="width: 15%;"></th>
-                                    <th style="width: 20%;">@alimentos.ConceptoServicio</th>
-                                    <th style="width: 15%;"></th>
-                                    <th style="width: 15%;"></th>
-                                    <th style="width: 20%;"></th>
+                                    <th style="width: 17%;"></th>
+                                    <th style="width: 17%;"></th>
+                                    <th style="width: 17%;"></th>
+                                    <th style="width: 17%;"></th>
+                                    <th style="width: 17%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td class="fw-bold bg-light">PRECIO:</td>
-                                    <td></td>
                                     <td>$ @(alimentos.Precio?.ToString("0.00") ?? "-")</td>
-                                    <td>$ -</td>
-                                    <td>$ -</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold bg-light">IVA:</td>
-                                    <td>0.16</td>
                                     <td>$ @(alimentos.Iva?.ToString("0.00") ?? "-")</td>
-                                    <td>$ -</td>
-                                    <td>$ -</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold bg-light">SERVICIO:</td>
-                                    <td>0.08</td>
                                     <td>$ @(alimentos.Servicio?.ToString("0.00") ?? "-")</td>
-                                    <td>$ -</td>
-                                    <td>$ -</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold bg-light">SUBTOTAL:</td>
-                                    <td></td>
                                     <td>$ @(alimentos.Subtotal?.ToString("0.00") ?? "-")</td>
-                                    <td>$ -</td>
-                                    <td>$ -</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold bg-light">NO. PAX:</td>
-                                    <td colspan="4" class="text-center">@alimentos.NoPax</td>
-                                    <td></td>
+                                    <td class="fw-bold">@alimentos.NoPax</td>
+                                    <td class="fw-bold">@alimentos.NoPax2</td>
+                                    <td class="fw-bold">@alimentos.NoPax3</td>
+                                    <td class="fw-bold">@alimentos.NoPax4</td>
+                                    <td class="fw-bold">@alimentos.NoPax5</td>
                                 </tr>
                                 <tr>
                                     <td class="fw-bold bg-light">NO. DÍAS:</td>
                                     <td>@alimentos.NoDias</td>
-                                    <td>$ @(alimentos.Total?.ToString("0.00") ?? "-")</td>
-                                    <td>$ -</td>
-                                    <td>$ -</td>
-                                    <td></td>
+                                    <td>@alimentos.NoDias2</td>
+                                    <td>@alimentos.NoDias3</td>
+                                    <td>@alimentos.NoDias4</td>
+                                    <td>@alimentos.NoDias5</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="fw-bold bg-light text-end pe-3">TOTAL:</td>
-                                    <td colspan="4" class="fw-bold fs-6">$ @(alimentos.Total?.ToString("0.00") ?? "-")</td>
+                                    <td class="fw-bold fs-6">$ @(alimentos.Total?.ToString("0.00") ?? "-")</td>
+                                    <td colspan="3"></td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <table class="table table-bordered border-dark text-center mt-0 mb-0" style="font-size: 0.9rem;">
+                        <table class="table table-bordered border-dark text-center mt-0 mb-0 border-top-0" style="font-size: 0.9rem;">
                             <tbody>
                                 <tr>
                                     <td style="width: 50%;" class="fw-bold bg-light">CORTESÍAS:</td>
                                     <td style="width: 50%;" class="fw-bold bg-light">PAGO:</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-3 fw-bold" style="min-height: 80px; text-transform: uppercase;">@alimentos.Cortesias</td>
-                                    <td class="p-3 fw-bold text-decoration-underline" style="min-height: 80px; text-transform: uppercase;">@alimentos.Pago</td>
+                                    <td class="p-3 fw-bold text-uppercase">@alimentos.Cortesias</td>
+                                    <td class="p-3 fw-bold text-decoration-underline">@alimentos.Pago</td>
                                 </tr>
                                 <tr>
-                                    <td rowspan="2" class="p-4 fw-bold" style="color: #084298;">@alimentos.Observaciones</td>
-                                    <td class="fw-bold bg-light">OBSERVACIONES:</td>
+                                    <td rowspan="2" class="p-4 align-middle fw-bold text-start" style="color: black; white-space: pre-wrap;">@alimentos.NotasAdicionales</td>
+                                    <td class="fw-bold bg-light text-start ps-3 border-bottom-0">OBSERVACIONES:</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-4 fw-bold fs-5 text-decoration-underline" style="background-color: #ffff00; text-transform: uppercase;">
-                                        @alimentos.ClienteEmpresa
+                                    <td class="p-4 border-top-0 fw-bold fs-5 text-uppercase" style="background-color: #ffff00; color: black;">@alimentos.Observaciones</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- SECCIÓN QUE ESTABA OCULTA EN EL DETALLE -->
+                        <table class="table table-bordered border-dark text-center mt-0 mb-0 border-top-0" style="font-size: 0.9rem;">
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold bg-light align-middle" style="width: 50%;">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            ESTACIONAMIENTO: <span class="ms-2 fw-bold text-dark">@alimentos.Estacionamiento</span>
+                                        </div>
                                     </td>
+                                    <td class="p-0" style="width: 50%;">
+                                        <table class="table table-borderless m-0 h-100 w-100">
+                                            <tr>
+                                                <td class="fw-bold bg-light border-bottom border-end border-dark" style="width: 50%;">PREPARAR:</td>
+                                                <td class="p-0 border-bottom border-dark align-middle fw-bold" style="width: 50%;">@alimentos.Preparar</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold bg-light border-end border-dark">GARANTÍA:</td>
+                                                <td class="p-0 align-middle fw-bold">@alimentos.Garantia</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="fw-bold bg-light fs-6 text-start ps-3">MENÚS:</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="p-4 fw-bold text-uppercase text-center" style="white-space: pre-wrap;">@alimentos.Menus</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -438,15 +485,113 @@
             }
             else
             {
-                <div class="alert alert-warning text-center shadow-sm p-5 mt-4 rounded-4">
-                    <h4><i class="bi bi-exclamation-triangle text-warning"></i> Archivo No Encontrado</h4>
-                    <p class="fs-5">Este grupo aún no tiene una Notificación de Evento (Alimentos y Salones) registrada.</p>
-                    <a asp-controller="NotificacionesEventos" asp-action="Create" asp-route-eventoId="@Model.Id" class="btn btn-success fw-bold px-4 shadow mt-3">
-                        <i class="bi bi-file-earmark-plus"></i> Crear Nuevo Archivo
-                    </a>
+                <div class="alert alert-secondary text-center shadow-sm p-5 mt-4 rounded-4">
+                    <h4><i class="bi bi-info-circle text-secondary"></i> Sin Formato de Alimentos</h4>
+                    <p class="fs-5">Este aviso no cuenta con una Notificación de Eventos (Alimentos) vinculada.</p>
                 </div>
             }
         </div>
+
+        <!-- ============================================== -->
+        <!-- PESTAÑA 3: MEMORÁNDUM                          -->
+        <!-- ============================================== -->
+        <div class="tab-pane fade" id="memorandum-panel" role="tabpanel">
+            @if (esMemorandum)
+            {
+                <div class="text-end mb-3">
+                    <button onclick="descargarPDF('documento-memorandum', 'Memorandum_@Model.Folio')" class="btn btn-danger shadow-sm">
+                        <i class="bi bi-file-earmark-pdf"></i> Descargar PDF (Memorándum)
+                    </button>
+                </div>
+
+                <div id="documento-memorandum">
+                    <div class="formato-impresion" style="max-width: 800px; margin: auto; background-color: white; padding: 40px; font-family: Arial, sans-serif;">
+
+                        <h3 class="text-center fw-bold mb-5" style="letter-spacing: 5px;">M E M O R A N D U M</h3>
+
+                        <div class="mb-4" style="line-height: 1.2;">
+                            <div class="d-flex"><div style="width: 80px;" class="fw-bold">Para:</div><div>@memo.Para</div></div>
+                            <div class="d-flex"><div style="width: 80px;" class="fw-bold">De:</div><div>@memo.De</div></div>
+                            <div class="d-flex"><div style="width: 80px;" class="fw-bold">Fecha:</div><div>@memo.FechaMemorandum</div></div>
+                            <div class="d-flex"><div style="width: 80px;" class="fw-bold">Asunto:</div><div class="fw-bold">“@(memo.Asunto?.ToUpper())”</div></div>
+                        </div>
+
+                        <p class="text-justify mb-4" style="font-size: 0.95rem;">@memo.Saludo</p>
+
+                        <div class="mb-4 fw-bold" style="line-height: 1.2;">
+                            <div>IN: @memo.CheckIn</div>
+                            <div>OUT: @memo.CheckOut</div>
+                            <div>GARANTIA: @memo.Garantia</div>
+                            <div class="mt-3">Nombre: @memo.NombreHuesped</div>
+                        </div>
+
+                        <table class="table table-bordered border-dark text-center align-middle mb-2" style="font-size: 0.85rem;">
+                            <thead class="fw-bold">
+                                <tr>
+                                    <th style="width: 30%; padding: 5px;">TIPO DE HABITACION</th>
+                                    <th style="width: 15%; padding: 5px;">CANTIDAD</th>
+                                    <th style="width: 15%; padding: 5px;">NOCHES</th>
+                                    <th style="width: 20%; padding: 5px;">COSTO</th>
+                                    <th style="width: 20%; padding: 5px;">TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 1; i <= 4; i++)
+                                {
+                                    var concepto = typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Concepto" + i)?.GetValue(memo)?.ToString();
+                                    var cantidad = typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Cantidad" + i)?.GetValue(memo)?.ToString();
+                                    var noches = typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Noches" + i)?.GetValue(memo)?.ToString();
+                                    var costo = (decimal?)(typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Costo" + i)?.GetValue(memo));
+                                    var total = (decimal?)(typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Total" + i)?.GetValue(memo));
+
+                                    if (!string.IsNullOrEmpty(concepto))
+                                    {
+                                        <tr>
+                                            <td class="fw-bold">@concepto</td>
+                                            <td>@cantidad</td>
+                                            <td>@noches</td>
+                                            <td>@(costo > 0 ? costo?.ToString("C") : "")</td>
+                                            <td>@(total > 0 ? total?.ToString("C") : "")</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+
+                        <div class="text-end fw-bold mb-5" style="font-size: 1.1rem;">
+                            TOTAL @(memo.GranTotal?.ToString("C") ?? "$ 0.00")
+                        </div>
+
+                        <div class="mb-5" style="font-size: 0.9rem; text-align: justify;">
+                            @if (!string.IsNullOrEmpty(memo.InstruccionesRecepcion))
+                            {
+                                <p class="mb-3"><span class="fw-bold">RECEPCION:</span> @memo.InstruccionesRecepcion</p>
+                            }
+                            @if (!string.IsNullOrEmpty(memo.InstruccionesRestaurante))
+                            {
+                                <p class="mb-3"><span class="fw-bold">RESTAURANTE:</span> @memo.InstruccionesRestaurante</p>
+                            }
+                            @if (!string.IsNullOrEmpty(memo.InstruccionesAmaLlaves))
+                            {
+                                <p class="mb-3"><span class="fw-bold">AMA DE LLAVES Y MTTO:</span> @memo.InstruccionesAmaLlaves</p>
+                            }
+                        </div>
+
+                        <div class="text-center fw-bold mt-5" style="font-size: 0.85rem;">
+                            @memo.NotaFinal
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-secondary text-center shadow-sm p-5 mt-4 rounded-4">
+                    <h4><i class="bi bi-info-circle text-secondary"></i> Sin Memorándum</h4>
+                    <p class="fs-5">Este aviso no cuenta con un formato de Memorándum adjunto.</p>
+                </div>
+            }
+        </div>
+
     </div>
 </div>
 
@@ -482,7 +627,7 @@
 
     // 3. Tomamos la "foto", generamos el PDF y lo descargamos
     html2pdf().set(opciones).from(elemento).save().then(function() {
-    // 4. Una vez descargado, regresamos tu diseño a 1000px en la pantalla para que siga viéndose igual
+    // 4. Una vez descargado, regresamos tu diseño original a la pantalla
     elemento.setAttribute("style", estiloOriginal);
     });
     }

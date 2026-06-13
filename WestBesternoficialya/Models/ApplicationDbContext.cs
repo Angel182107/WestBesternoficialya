@@ -17,4 +17,5 @@ public class ApplicationDbContext : DbContext
     public DbSet<Reservacion> Reservaciones { get; set; }
     public DbSet<FormatoReservacion> FormatosReservacion { get; set; }
     public DbSet<NotificacionEvento> NotificacionesEventos { get; set; }
+    public DbSet<Memorandum> Memorandums { get; set; }
 }

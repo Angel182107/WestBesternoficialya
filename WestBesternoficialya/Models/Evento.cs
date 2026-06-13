@@ -103,5 +103,6 @@ namespace WestBesternoficialya.Models
         public int? NochesTriple { get; set; }
         public int? NochesCuadruple { get; set; }
         public int? NochesCortesia { get; set; }
+        public Memorandum? Memorandum { get; set; }
     }
 }

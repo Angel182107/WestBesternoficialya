@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WestBesternoficialya.Data;
 using WestBesternoficialya.Models;
-using Microsoft.AspNetCore.Authorization; // <-- No olvides esta línea hasta arriba de todo el archivo
+using Microsoft.AspNetCore.Authorization;
 
 namespace WestBesternoficialya.Controllers;
 
@@ -83,6 +83,8 @@ public class EventosController : Controller
         // 2. Buscamos el formato de alimentos engrapado a este grupo
         var alimentos = await _context.NotificacionesEventos.FirstOrDefaultAsync(n => n.EventoId == id);
 
+        ViewBag.Memorandum = await _context.Memorandums.FirstOrDefaultAsync(m => m.EventoId == id);
+
         // 3. Pasamos el formato de alimentos a la pantalla a través de la charola "ViewBag"
         ViewBag.Alimentos = alimentos;
 
@@ -100,11 +102,12 @@ public class EventosController : Controller
     {
         if (id == null) return NotFound();
 
-        // Buscamos el Instructivo principal
-        var evento = await _context.Eventos.FindAsync(id);
+        var evento = await _context.Eventos
+            .Include(e => e.Memorandum)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
         if (evento == null) return NotFound();
 
-        // Buscamos el formato de Alimentos (si es que existe) y lo pasamos a la pantalla
         ViewBag.Alimentos = await _context.NotificacionesEventos.FirstOrDefaultAsync(n => n.EventoId == id);
 
         return View(evento);
