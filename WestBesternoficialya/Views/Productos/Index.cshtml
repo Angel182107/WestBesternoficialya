@@ -39,6 +39,9 @@
                     <td>
                         <a asp-action="Edit" asp-route-id="@producto.Id" class="btn btn-warning btn-sm">Editar</a>
                         <a asp-action="Delete" asp-route-id="@producto.Id" class="btn btn-danger btn-sm">Borrar</a>
+                        <a asp-action="Usar" asp-route-id="@producto.Id" class="btn btn-success btn-sm shadow-sm fw-bold">
+                            <i class="bi bi-box-arrow-up"></i> Usar
+                        </a>
                     </td>
                 </tr>
             }

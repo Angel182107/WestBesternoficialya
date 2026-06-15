@@ -14,7 +14,15 @@ public class NotificacionesEventosController : Controller
     {
         _context = context;
     }
+    [AllowAnonymous] // Permite que cualquier empleado vea la campanita, aunque no sea Administrador
+    [HttpGet]
+    public IActionResult ObtenerContador()
+    {
+        // Aquí le decimos a la base de datos que cuente cuántos eventos/avisos existen.
+        int cantidadAvisosNuevos = _context.Eventos.Count();
 
+        return Json(cantidadAvisosNuevos);
+    }
     // 1. Mostrar la pantalla en blanco para crear
     public IActionResult Create(int eventoId)
     {
