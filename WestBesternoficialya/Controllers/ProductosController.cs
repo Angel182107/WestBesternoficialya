@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WestBesternoficialya.Controllers;
 
-[Authorize(Roles = "Administrador")]
+[Authorize]
 public class ProductosController : Controller
 {
     // ... el resto de tu código ...
@@ -109,6 +109,50 @@ public class ProductosController : Controller
             _context.Inventario.Remove(producto);
             await _context.SaveChangesAsync();
         }
+        return RedirectToAction(nameof(Index));
+    }
+    // 1. Mostrar la ventanita cuando le dan clic al botón "Usar"
+    public async Task<IActionResult> Usar(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var producto = await _context.Inventario.FindAsync(id);
+        if (producto == null) return NotFound();
+
+        return View(producto); // Le mandamos los datos del producto a la ventana
+    }
+
+    // 2. Hacer la resta cuando le dan clic a "Guardar Cambios"
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Usar(int id, int cantidadUsar)
+    {
+        // Buscamos el producto en la base de datos
+        var producto = await _context.Inventario.FindAsync(id);
+        if (producto == null) return NotFound();
+
+        // Verificamos que no intenten sacar más piezas de las que hay
+        if (cantidadUsar > producto.CantidadActual)
+        {
+            ModelState.AddModelError("", "¡Cuidado! No hay suficiente cantidad en el inventario.");
+            return View(producto);
+        }
+
+        // Verificamos que no pongan números negativos o cero
+        if (cantidadUsar <= 0)
+        {
+            ModelState.AddModelError("", "Ingresa una cantidad mayor a 0.");
+            return View(producto);
+        }
+
+        // Hacemos la resta matemática
+        producto.CantidadActual = producto.CantidadActual - cantidadUsar;
+
+        // Guardamos los cambios
+        _context.Update(producto);
+        await _context.SaveChangesAsync();
+
+        // Regresamos a la tabla de Almacén
         return RedirectToAction(nameof(Index));
     }
 }

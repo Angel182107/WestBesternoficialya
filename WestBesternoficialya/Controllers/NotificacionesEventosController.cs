@@ -14,7 +14,41 @@ public class NotificacionesEventosController : Controller
     {
         _context = context;
     }
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult ObtenerNotificacionesMenu()
+    {
+        var alertasInventario = _context.Inventario
+            .Where(p => p.CantidadActual <= p.StockMinimo || p.CantidadActual >= p.StockMaximo)
+            .Select(p => new {
+                id = "inv_" + p.Id, // <-- NUEVO: Le damos un ID único al producto
+                tipo = "inventario",
+                texto = p.CantidadActual <= p.StockMinimo
+                        ? $"¡Stock bajo! {p.Nombre} tiene solo {p.CantidadActual} pz."
+                        : $"¡Stock alto! {p.Nombre} tiene {p.CantidadActual} pz.",
+                enlace = "/Productos/Index"
+            }).ToList();
 
+        var avisosNuevos = _context.Eventos
+            .OrderByDescending(e => e.Id)
+            .Take(3)
+            .Select(e => new {
+                id = "aviso_" + e.Id, // <-- NUEVO: Le damos un ID único al aviso
+                tipo = "aviso",
+                texto = $"Nuevo aviso: {e.Titulo}",
+                enlace = "/Eventos/Index"
+            }).ToList();
+
+        var todasLasNotificaciones = new List<dynamic>();
+        todasLasNotificaciones.AddRange(alertasInventario);
+        todasLasNotificaciones.AddRange(avisosNuevos);
+
+        // Ya no mandamos el "total" desde aquí, lo calcularemos en el diseño
+        return Json(new
+        {
+            mensajes = todasLasNotificaciones
+        });
+    }
     // 1. Mostrar la pantalla en blanco para crear
     public IActionResult Create(int eventoId)
     {
