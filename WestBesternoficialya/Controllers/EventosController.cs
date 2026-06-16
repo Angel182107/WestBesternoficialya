@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WestBesternoficialya.Data;
 using WestBesternoficialya.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using System;
+using System.Threading.Tasks;
 
 namespace WestBesternoficialya.Controllers;
 
@@ -17,80 +19,81 @@ public class EventosController : Controller
         _context = context;
     }
 
-    // --- EL TABLERO DE ANUNCIOS (Pantalla principal) ---
+    // --- TABLERO DE ANUNCIOS ---
     public async Task<IActionResult> Index()
     {
         var eventos = await _context.Eventos.ToListAsync();
         return View(eventos);
     }
 
-    // --- VIAJE DE IDA: Formulario para publicar un aviso ---
-    [Authorize(Roles = "Administrador")]
+    // --- PUBLICAR NUEVO AVISO (GET) ---
+    [HttpGet]
+    [Authorize(Roles = "Administrador, Mantenimiento")]
     public IActionResult Create()
     {
         return View();
     }
 
-    // --- VIAJE DE VUELTA: Guardar el aviso nuevo ---
+    // --- PUBLICAR NUEVO AVISO (POST - RECIBE EL EXCEL) ---
     [HttpPost]
-    [Authorize(Roles = "Administrador")]
-    public async Task<IActionResult> Create(Evento evento)
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Administrador, Mantenimiento")]
+    public async Task<IActionResult> Create(Evento evento, IFormFile archivoExcel)
     {
-        if (ModelState.IsValid)
+        ModelState.Remove("Creador");
+
+        if (archivoExcel != null && archivoExcel.Length > 0)
         {
-            evento.Creador = User.Identity.Name;
-            _context.Eventos.Add(evento);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("ExitoAlCrear", new { id = evento.Id });
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            string nombreUnico = Guid.NewGuid().ToString() + "_" + Path.GetFileName(archivoExcel.FileName);
+            string filePath = Path.Combine(folderPath, nombreUnico);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await archivoExcel.CopyToAsync(stream);
+            }
+
+            evento.DetallesLogistica = "/uploads/" + nombreUnico;
         }
-        return View(evento);
+        else
+        {
+            ModelState.AddModelError("", "Por favor, selecciona un archivo Excel válido.");
+            return View(evento);
+        }
+
+        evento.FechaCreacion = DateTime.Now;
+        evento.Creador = User.Identity.Name ?? "Administrador";
+
+        _context.Add(evento);
+        await _context.SaveChangesAsync();
+
+        TempData["MensajeExito"] = "Aviso publicado correctamente.";
+        return RedirectToAction(nameof(Index));
     }
 
-    // ==========================================
-    // SECCIÓN: PANTALLA PUENTE (Botón de Continuar)
-    // ==========================================
-    [Authorize(Roles = "Administrador")]
-    public IActionResult ExitoAlCrear(int id)
-    {
-        ViewBag.EventoId = id;
-        return View();
-    }
-
-    // ==========================================
-    // SECCIÓN: VER DETALLES DEL AVISO Y ALIMENTOS
-    // ==========================================
+    // --- VER DETALLES ---
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null) return NotFound();
-
         var evento = await _context.Eventos.FirstOrDefaultAsync(m => m.Id == id);
         if (evento == null) return NotFound();
-
-        // Buscamos alimentos y memorandum
-        ViewBag.Alimentos = await _context.NotificacionesEventos.FirstOrDefaultAsync(n => n.EventoId == id);
-        ViewBag.Memorandum = await _context.Memorandums.FirstOrDefaultAsync(m => m.EventoId == id);
-
-        // ¡LISTO! Eliminamos la carga de mantenimiento de aquí
         return View(evento);
     }
 
-    // ==========================================
-    // SECCIÓN: EDITAR EVENTOS Y ALIMENTOS
-    // ==========================================
+    // --- EDITAR ---
     [HttpGet]
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null) return NotFound();
-
-        var evento = await _context.Eventos
-            .Include(e => e.Memorandum)
-            .FirstOrDefaultAsync(m => m.Id == id);
-
+        var evento = await _context.Eventos.FirstOrDefaultAsync(m => m.Id == id);
         if (evento == null) return NotFound();
-
-        ViewBag.Alimentos = await _context.NotificacionesEventos.FirstOrDefaultAsync(n => n.EventoId == id);
-
         return View(evento);
     }
 
@@ -99,10 +102,6 @@ public class EventosController : Controller
     public async Task<IActionResult> Edit(int id, Evento evento)
     {
         if (id != evento.Id) return NotFound();
-
-        ModelState.Remove("AcusesRecibo");
-        ModelState.Remove("NotificacionesEventos");
-
         if (ModelState.IsValid)
         {
             _context.Update(evento);
@@ -112,18 +111,14 @@ public class EventosController : Controller
         return View(evento);
     }
 
-    // ==========================================
-    // SECCIÓN: ELIMINAR EVENTO (PROTEGIDO)
-    // ==========================================
+    // --- ELIMINAR ---
     [HttpGet]
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null) return NotFound();
-
         var evento = await _context.Eventos.FirstOrDefaultAsync(m => m.Id == id);
         if (evento == null) return NotFound();
-
         return View(evento);
     }
 
@@ -133,82 +128,26 @@ public class EventosController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var evento = await _context.Eventos.FindAsync(id);
-        if (evento == null) return NotFound();
-
-        _context.Eventos.Remove(evento);
-        await _context.SaveChangesAsync();
-
-        TempData["MensajeExito"] = "El formato se eliminó correctamente.";
+        if (evento != null)
+        {
+            _context.Eventos.Remove(evento);
+            await _context.SaveChangesAsync();
+        }
         return RedirectToAction(nameof(Index));
     }
 
-    // ==========================================
-    // SECCIÓN: FIRMA DIGITAL (ACUSE DE RECIBO)
-    // ==========================================
+    // --- FIRMA DIGITAL ---
     public async Task<IActionResult> Firmar(int? id)
     {
         if (id == null) return NotFound();
-
         var evento = await _context.Eventos.FindAsync(id);
-        if (evento == null) return NotFound();
-
         return View(evento);
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> GuardarFirma(int eventoId)
-    {
-        var nombreEnGafete = User.Identity.Name;
-
-        var usuario = await _context.Usuarios
-            .Include(u => u.Departamento)
-            .FirstOrDefaultAsync(u => u.NombreCompleto == nombreEnGafete);
-
-        if (usuario == null) return Unauthorized();
-
-        bool yaFirmado = await _context.AcusesRecibo
-            .AnyAsync(a => a.EventoId == eventoId && a.UsuarioId == usuario.Id);
-
-        if (yaFirmado)
-        {
-            TempData["MensajeInfo"] = "Ya habías firmado este aviso de logística anteriormente.";
-            return RedirectToAction(nameof(Index));
-        }
-
-        var acuse = new AcuseRecibo
-        {
-            EventoId = eventoId,
-            UsuarioId = usuario.Id,
-            FechaHoraFirma = DateTime.Now,
-            DepartamentoFirma = usuario.Departamento?.Nombre ?? "Sin Departamento"
-        };
-
-        _context.AcusesRecibo.Add(acuse);
-        await _context.SaveChangesAsync();
-
-        TempData["MensajeExito"] = "Tu firma se registró correctamente.";
-        return RedirectToAction(nameof(Index));
-    }
-
-    // ==========================================
-    // SECCIÓN: REPORTE DE FIRMAS (QUIÉN YA LEYÓ)
-    // ==========================================
     public async Task<IActionResult> ReporteFirmas(int? id)
     {
         if (id == null) return NotFound();
-
-        var evento = await _context.Eventos.FindAsync(id);
-        if (evento == null) return NotFound();
-
-        var firmas = await _context.AcusesRecibo
-            .Include(a => a.Usuario)
-            .Where(a => a.EventoId == id)
-            .OrderByDescending(a => a.FechaHoraFirma)
-            .ToListAsync();
-
-        ViewBag.TituloEvento = evento.Titulo;
-
+        var firmas = await _context.AcusesRecibo.Include(a => a.Usuario).Where(a => a.EventoId == id).ToListAsync();
         return View(firmas);
     }
 }
