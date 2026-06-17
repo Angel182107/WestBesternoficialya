@@ -1,13 +1,12 @@
 ﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Iniciar Sesión - Hotel San Pedro</title>
+    <title>Iniciar Sesión - Hotel Best Western</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
@@ -34,7 +33,8 @@
     <div class="login-card">
         <div class="text-center mb-4">
             <i class="bi bi-building-lock text-primary" style="font-size: 3rem;"></i>
-            <h3 class="fw-bold mt-2">Hotel San Pedro</h3>
+            <!-- CAMBIO 1: Nombre del Hotel -->
+            <h3 class="fw-bold mt-2">Hotel Best Western</h3>
             <p class="text-muted">Ingresa tus credenciales para acceder</p>
         </div>
 
@@ -47,10 +47,12 @@
 
         <form asp-controller="Acceso" asp-action="Entrar" method="post">
             <div class="mb-3">
-                <label class="form-label fw-bold">Usuario</label>
+                <!-- CAMBIO 2: De 'Usuario' a 'Correo Electrónico' -->
+                <label class="form-label fw-bold">Correo Electrónico</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
-                    <input type="text" name="correo" class="form-control" placeholder="Escribe 'admin'" required />
+                    <!-- CAMBIO 3: Placeholder del correo -->
+                    <input type="text" name="correo" class="form-control" placeholder="Escribe tu correo" required />
                 </div>
             </div>
 
@@ -58,7 +60,8 @@
                 <label class="form-label fw-bold">Contraseña</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
-                    <input type="password" name="clave" class="form-control" placeholder="Escribe '12345'" required />
+                    <!-- CAMBIO 4: Placeholder de la contraseña -->
+                    <input type="password" name="clave" class="form-control" placeholder="Escribe tu contraseña" required />
                 </div>
             </div>
 
@@ -67,6 +70,5 @@
             </button>
         </form>
     </div>
-
 </body>
 </html>

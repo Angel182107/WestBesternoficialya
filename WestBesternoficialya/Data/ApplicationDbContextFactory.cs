@@ -11,7 +11,7 @@ namespace WestBesternoficialya.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            var connectionString = "Server=localhost;Port=3306;Database=Hotel_San_Pedro;User=root;password=;";
+            var connectionString = "Server=localhost;Port=3306;Database=hotel_bw;User=root;password=;";
 
             optionsBuilder.UseMySql(
                 connectionString,

@@ -19,9 +19,6 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        // 1. Va y cuenta cuántas habitaciones están marcadas como "Sucia"
-        int habitacionesSucias = await _context.Habitaciones.CountAsync(h => h.Estado == "Sucia");
-
         // 2. Va y cuenta cuántos productos están en alerta roja (Cantidad <= Stock Minimo)
         int alertasAlmacen = await _context.Inventario.CountAsync(p => p.CantidadActual <= p.StockMinimo);
 
@@ -32,7 +29,6 @@ public class HomeController : Controller
         int totalEventos = await _context.Eventos.CountAsync();
 
         // Ponemos los números en la "charola" (ViewBag) para mandarlos a la pantalla
-        ViewBag.HabitacionesSucias = habitacionesSucias;
         ViewBag.AlertasAlmacen = alertasAlmacen;
         ViewBag.TotalEmpleados = totalEmpleados;
         ViewBag.TotalEventos = totalEventos;

@@ -38,10 +38,11 @@ namespace WestBesternoficialya.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Titulo = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DetallesLogistica = table.Column<string>(type: "longtext", nullable: false)
+                    DetallesLogistica = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaCreacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    EsUrgente = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Creador = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -50,19 +51,22 @@ namespace WestBesternoficialya.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Habitaciones",
+                name: "MaterialesMantenimiento",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Numero = table.Column<string>(type: "longtext", nullable: false)
+                    Fecha = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Marca = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Estado = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Maximo = table.Column<int>(type: "int", nullable: false),
+                    Minimo = table.Column<int>(type: "int", nullable: false),
+                    Existencia = table.Column<int>(type: "int", nullable: false),
+                    Comprar = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Habitaciones", x => x.Id);
+                    table.PrimaryKey("PK_MaterialesMantenimiento", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -118,31 +122,6 @@ namespace WestBesternoficialya.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Incidencias",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Descripcion = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FechaReporte = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    EstaResuelto = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    HabitacionId = table.Column<int>(type: "int", nullable: false),
-                    UsuarioReportaId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Incidencias", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Incidencias_Habitaciones_HabitacionId",
-                        column: x => x.HabitacionId,
-                        principalTable: "Habitaciones",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AcusesRecibo",
                 columns: table => new
                 {
@@ -150,7 +129,9 @@ namespace WestBesternoficialya.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     EventoId = table.Column<int>(type: "int", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    FechaHoraFirma = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    FechaHoraFirma = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DepartamentoFirma = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -181,11 +162,6 @@ namespace WestBesternoficialya.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Incidencias_HabitacionId",
-                table: "Incidencias",
-                column: "HabitacionId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Inventario_DepartamentoId",
                 table: "Inventario",
                 column: "DepartamentoId");
@@ -203,19 +179,16 @@ namespace WestBesternoficialya.Migrations
                 name: "AcusesRecibo");
 
             migrationBuilder.DropTable(
-                name: "Incidencias");
+                name: "Inventario");
 
             migrationBuilder.DropTable(
-                name: "Inventario");
+                name: "MaterialesMantenimiento");
 
             migrationBuilder.DropTable(
                 name: "Eventos");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
-
-            migrationBuilder.DropTable(
-                name: "Habitaciones");
 
             migrationBuilder.DropTable(
                 name: "Departamentos");

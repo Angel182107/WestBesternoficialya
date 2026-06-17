@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WestBesternoficialya.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Administrador,Administracion,Ama de llaves")]
 public class ProductosController : Controller
 {
     // ... el resto de tu código ...

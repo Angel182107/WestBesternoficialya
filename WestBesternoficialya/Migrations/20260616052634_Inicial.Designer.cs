@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WestBesternoficialya.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260523181332_AgregarRolUsuarios")]
-    partial class AgregarRolUsuarios
+    [Migration("20260616052634_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,9 @@ namespace WestBesternoficialya.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DepartamentoFirma")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("EventoId")
                         .HasColumnType("int");
@@ -75,12 +78,11 @@ namespace WestBesternoficialya.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DetallesLogistica")
-                        .IsRequired()
+                    b.Property<string>("Creador")
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("EsUrgente")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("DetallesLogistica")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
@@ -94,7 +96,7 @@ namespace WestBesternoficialya.Migrations
                     b.ToTable("Eventos");
                 });
 
-            modelBuilder.Entity("WestBesternoficialya.Models.Habitacion", b =>
+            modelBuilder.Entity("WestBesternoficialya.Models.MaterialMantenimiento", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,55 +104,28 @@ namespace WestBesternoficialya.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Numero")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<string>("Tipo")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Habitaciones");
-                });
-
-            modelBuilder.Entity("WestBesternoficialya.Models.Incidencia", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Comprar")
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("Existencia")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("EstaResuelto")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("FechaReporte")
+                    b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("HabitacionId")
+                    b.Property<string>("Marca")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Maximo")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsuarioReportaId")
+                    b.Property<int>("Minimo")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HabitacionId");
-
-                    b.ToTable("Incidencias");
+                    b.ToTable("MaterialesMantenimiento");
                 });
 
             modelBuilder.Entity("WestBesternoficialya.Models.Producto", b =>
@@ -184,45 +159,6 @@ namespace WestBesternoficialya.Migrations
                     b.ToTable("Inventario");
                 });
 
-            modelBuilder.Entity("WestBesternoficialya.Models.Reservacion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("EstadoReserva")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("FechaEntrada")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("FechaSalida")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("HabitacionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NombreCliente")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Telefono")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<decimal>("TotalCobrar")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HabitacionId");
-
-                    b.ToTable("Reservaciones");
-                });
-
             modelBuilder.Entity("WestBesternoficialya.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -243,10 +179,6 @@ namespace WestBesternoficialya.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Rol")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -276,17 +208,6 @@ namespace WestBesternoficialya.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("WestBesternoficialya.Models.Incidencia", b =>
-                {
-                    b.HasOne("WestBesternoficialya.Models.Habitacion", "Habitacion")
-                        .WithMany()
-                        .HasForeignKey("HabitacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Habitacion");
-                });
-
             modelBuilder.Entity("WestBesternoficialya.Models.Producto", b =>
                 {
                     b.HasOne("WestBesternoficialya.Models.Departamento", "Departamento")
@@ -296,17 +217,6 @@ namespace WestBesternoficialya.Migrations
                         .IsRequired();
 
                     b.Navigation("Departamento");
-                });
-
-            modelBuilder.Entity("WestBesternoficialya.Models.Reservacion", b =>
-                {
-                    b.HasOne("WestBesternoficialya.Models.Habitacion", "Habitacion")
-                        .WithMany()
-                        .HasForeignKey("HabitacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Habitacion");
                 });
 
             modelBuilder.Entity("WestBesternoficialya.Models.Usuario", b =>

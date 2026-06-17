@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WestBesternoficialya.Models;
 using WestBesternoficialya.Data;
+using WestBesternoficialya.Models;
 
 namespace WestBesternoficialya.Controllers
 {
+    [Authorize(Roles = "Administrador,Administracion,Mantenimiento")]
     public class MantenimientoController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -5,31 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Hotel BW</title>
 
-    <!-- LIBRERÍA DE ÍCONOS DE BOOTSTRAP (¡Para que se vean tus íconos!) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- ======================================================== -->
-    <!-- AQUÍ ESTÁ LA MAGIA DE LOS TEMAS. Prueba descomentar uno: -->
-    <!-- ======================================================== -->
-    <!-- TEMA 1: ZEPHYR (Moderno, limpio y con sombras) - ACTIVO POR DEFECTO -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.3/zephyr/bootstrap.min.css" /> -->
-
-    <!-- TEMA 2: FLATLY (Corporativo, plano, verde oscuro) - Quita el de arriba y usa este si quieres probarlo -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.3/flatly/bootstrap.min.css" /> -->
-    <!-- TEMA 3: MATERIA (Estilo Google, animaciones al dar clic) - Quita el de arriba y usa este si quieres probarlo -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.3/materia/bootstrap.min.css" />
-    <!-- TU BOOTSTRAP ORIGINAL (Por si algún día quieres regresar al básico) -->
-    <!-- <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> -->
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WestBesternoficialya.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-4">
             <div class="container-fluid">
-                <!-- Título actualizado a Hotel BW -->
                 <a class="navbar-brand fw-bolder text-primary fs-4" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-buildings-fill me-1"></i> Hotel BW
                 </a>
@@ -41,7 +27,7 @@
 
                     <ul class="navbar-nav flex-grow-1">
 
-                        @if (User.IsInRole("Administrador"))
+                        @if (User.IsInRole("Administrador") || User.IsInRole("Administracion"))
                         {
                             <li class="nav-item me-2">
                                 <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Departamentos" asp-action="Index">🏢 Departamentos</a>
@@ -49,17 +35,25 @@
                             <li class="nav-item me-2">
                                 <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Usuarios" asp-action="Index">👥 Personal</a>
                             </li>
-                            <li class="nav-item">
+                        }
+
+                        @if (User.IsInRole("Administrador") || User.IsInRole("Administracion") || User.IsInRole("Mantenimiento"))
+                        {
+                            <li class="nav-item me-2">
                                 <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Mantenimiento" asp-action="Index">
                                     <i class="bi bi-tools text-secondary"></i> Mantenimiento
                                 </a>
                             </li>
                         }
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Productos" asp-action="Index">📦 Almacén</a>
-                        </li>
-                        <li class="nav-item">
+                        @if (User.IsInRole("Administrador") || User.IsInRole("Administracion") || User.IsInRole("Ama de llaves"))
+                        {
+                            <li class="nav-item me-2">
+                                <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Productos" asp-action="Index">📦 Almacén</a>
+                            </li>
+                        }
+
+                        <li class="nav-item me-2">
                             <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Eventos" asp-action="Index">📢 Avisos</a>
                         </li>
 
@@ -78,7 +72,7 @@
                                 <li><h6 class="dropdown-header fw-bold text-dark bg-light py-2">Notificaciones Recientes</h6></li>
 
                                 <div id="contenedor-notificaciones">
-                                    <li><span class="dropdown-item text-muted text-center">Cargando...</span></li>
+                                    <li><span class="dropdown-item text-muted text-center">No hay notificaciones nuevas</span></li>
                                 </div>
                             </ul>
                         </li>
@@ -101,7 +95,6 @@
         </main>
     </div>
 
-    <!-- Footer actualizado a Hotel BW -->
     <footer class="border-top footer text-muted mt-5 bg-light">
         <div class="container py-3">
             &copy; 2026 - Sistema Hotel BW - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-decoration-none fw-bold">Privacidad</a>
@@ -112,72 +105,5 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
-    <script>
-        // Esta función guarda en la memoria del navegador lo que ya tocaste
-        function ocultarNotificacion(id) {
-        let leidas = JSON.parse(localStorage.getItem('notificacionesLeidas') || '[]');
-        if (!leidas.includes(id)) {
-        leidas.push(id); // La anotamos en la lista negra
-        localStorage.setItem('notificacionesLeidas', JSON.stringify(leidas));
-        }
-        }
-
-        function actualizarCampanita() {
-        // Usamos la ruta absoluta de ASP.NET para que NUNCA desaparezca en otras ventanas
-        $.get('/NotificacionesEventos/ObtenerNotificacionesMenu', function(data) {
-
-        let badge = $('#contador-notificaciones');
-        let contenedor = $('#contenedor-notificaciones');
-
-        // Traemos las notificaciones que ya borraste antes
-        let leidas = JSON.parse(localStorage.getItem('notificacionesLeidas') || '[]');
-
-        // Filtramos la basura: Solo mostramos las que NO están en la lista de leídas
-        let mensajesNuevos = data.mensajes.filter(m => !leidas.includes(m.id));
-        let totalNoLeidos = mensajesNuevos.length;
-
-        if (totalNoLeidos > 0) {
-        badge.text(totalNoLeidos).show();
-        } else {
-        badge.hide();
-        }
-
-        contenedor.empty();
-
-        if (totalNoLeidos === 0) {
-        contenedor.append('<li><span class="dropdown-item text-muted text-center py-3">No tienes notificaciones nuevas <i class="bi bi-emoji-smile"></i></span></li>');
-        return;
-        }
-
-        mensajesNuevos.forEach(function(mensaje) {
-        let icono = mensaje.tipo === 'inventario'
-        ? '<i class="bi bi-exclamation-triangle-fill text-danger me-2 fs-5"></i>'
-        : '<i class="bi bi-megaphone-fill text-primary me-2 fs-5"></i>';
-
-        // Al darle clic (onclick), activa la función para borrarla
-        let elementoHtml = `
-        <li>
-        <a class="dropdown-item text-wrap py-2 border-bottom" href="${mensaje.enlace}" onclick="ocultarNotificacion('${mensaje.id}')">
-        <div class="d-flex align-items-center">
-        ${icono}
-        <span>${mensaje.texto}</span>
-        </div>
-        </a>
-        </li>
-        `;
-        contenedor.append(elementoHtml);
-        });
-
-        }).fail(function() {
-        console.log("Error buscando notificaciones.");
-        });
-        }
-
-        $(document).ready(function() {
-        actualizarCampanita();
-        setInterval(actualizarCampanita, 30000);
-        });
-    </script>
 </body>
 </html>

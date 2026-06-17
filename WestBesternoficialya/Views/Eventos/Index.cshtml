@@ -1,21 +1,14 @@
 ﻿@model IEnumerable<WestBesternoficialya.Models.Evento>
 
 <div class="container mt-4">
-    <!-- CABECERA MODIFICADA CON CANDADO DE SEGURIDAD -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-primary fw-bold">Tablero de Avisos</h2>
 
-        @if (User.IsInRole("Administrador") || User.IsInRole("Mantenimiento"))
-        {
-            <div class="d-flex gap-2">
-                <a asp-controller="Mantenimiento" asp-action="Index" class="btn btn-outline-info fw-bold shadow-sm">
-                    <i class="bi bi-tools"></i> Ver Reporte de Mantenimiento
-                </a>
-                <a asp-action="Create" class="btn btn-primary fw-bold shadow-sm">
-                    <i class="bi bi-plus-circle"></i> Publicar Nuevo Aviso
-                </a>
-            </div>
-        }
+        <div class="d-flex gap-2">
+            <a asp-action="Create" class="btn btn-primary fw-bold shadow-sm">
+                <i class="bi bi-plus-circle"></i> Publicar Nuevo Aviso
+            </a>
+        </div>
     </div>
     <hr />
 
@@ -33,55 +26,123 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
+    @if (TempData["MensajeError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> @TempData["MensajeError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <div class="row">
         @foreach (var evento in Model)
         {
+            // =======================================================
+            // LÓGICA MÁGICA: Separamos el texto de los archivos
+            // =======================================================
+            string textoAviso = "";
+            string archivosAdjuntos = "";
+
+            if (!string.IsNullOrEmpty(evento.DetallesLogistica))
+            {
+                if (evento.DetallesLogistica.Contains("===ARCHIVOS==="))
+                {
+                    var partes = evento.DetallesLogistica.Split(new[] { "===ARCHIVOS===" }, StringSplitOptions.None);
+                    textoAviso = partes[0];
+                    if (partes.Length > 1) { archivosAdjuntos = partes[1]; }
+                }
+                else if (evento.DetallesLogistica.Contains("::"))
+                {
+                    archivosAdjuntos = evento.DetallesLogistica; // Formato viejo (solo archivos)
+                }
+                else
+                {
+                    textoAviso = evento.DetallesLogistica; // Formato viejo (solo texto)
+                }
+            }
+
             <div class="col-md-4 mb-4">
-                <div class="card shadow h-100">
+                <div class="card shadow h-100 border-0 rounded-3">
 
                     <div class="card-header bg-dark text-white fw-bold">
                         Aviso del Hotel
                     </div>
 
                     <div class="card-body">
-                        <h5 class="card-title">@evento.Titulo</h5>
+                        <h5 class="card-title text-primary fw-bold">@evento.Titulo</h5>
 
-                        <!-- Etiqueta que indica que contiene un archivo -->
-                        <div class="mt-2 mb-2">
-                            <span class="badge bg-secondary"><i class="bi bi-file-earmark-spreadsheet"></i> Contiene Instructivo de Grupo</span>
-                        </div>
+                        @if (!string.IsNullOrWhiteSpace(textoAviso))
+                        {
+                            <p class="card-text mt-3 text-secondary" style="white-space: pre-wrap;">@textoAviso</p>
+                        }
 
-                        <p class="text-muted small mb-0 mt-3">Fecha: @evento.FechaCreacion.ToString("dd/MM/yyyy")</p>
-                        <p class="text-muted small">Publicado por: <strong>@(evento.Creador ?? "Administrador")</strong></p>
+                        @if (!string.IsNullOrEmpty(archivosAdjuntos))
+                        {
+                            int numArchivos = archivosAdjuntos.Split('|').Length;
+                            <div class="mt-3 mb-2">
+                                <span class="badge bg-secondary"><i class="bi bi-collection"></i> @numArchivos Archivo(s) Adjunto(s)</span>
+                            </div>
+                        }
+
+                        <hr class="text-muted" />
+                        <p class="text-muted small mb-0">Fecha: @evento.FechaCreacion.ToString("dd/MM/yyyy")</p>
+                        <p class="text-muted small mb-0">Publicado por: <strong class="text-dark">@(evento.Creador ?? "Administrador")</strong></p>
                     </div>
 
-                    <div class="card-footer bg-transparent text-center border-top-0">
-                        <!-- LOGICA DE DESCARGA DIRECTA PARA EXCEL O VISTA NORMAL -->
-                        @if (!string.IsNullOrEmpty(evento.DetallesLogistica) && evento.DetallesLogistica.StartsWith("/uploads/"))
-                        {
-                            <a href="@evento.DetallesLogistica" class="btn btn-primary btn-sm mb-1 w-100" download>
-                                <i class="bi bi-file-earmark-excel-fill"></i> Descargar Formato Excel
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-action="Details" asp-route-id="@evento.Id" class="btn btn-primary btn-sm mb-1 w-100"><i class="bi bi-eye"></i> Abrir Documento</a>
-                        }
+                    <div class="card-footer bg-light text-center border-top-0 pt-3 pb-3">
 
-                        <div class="mt-1">
-                            <a asp-action="Firmar" asp-route-id="@evento.Id" class="btn btn-success btn-sm mb-1">Marcar de Enterado</a>
-                            <a asp-action="ReporteFirmas" asp-route-id="@evento.Id" class="btn btn-info btn-sm mb-1 text-white">Ver Firmas</a>
-
-                            @if (evento.Creador == User.Identity.Name || User.IsInRole("Administrador"))
+                        @if (!string.IsNullOrEmpty(archivosAdjuntos))
+                        {
+                            var archivos = archivosAdjuntos.Split('|');
+                            foreach (var arch in archivos)
                             {
-                                <a asp-action="Edit" asp-route-id="@evento.Id" class="btn btn-warning btn-sm mb-1">Editar</a>
-                                <a asp-action="Delete" asp-route-id="@evento.Id" class="btn btn-danger btn-sm mb-1">Borrar</a>
+                                if (arch.Contains("::"))
+                                {
+                                    var datosArchivo = arch.Split("::");
+                                    if (datosArchivo.Length == 2)
+                                    {
+                                        var nombreOriginal = datosArchivo[0];
+                                        var rutaArchivo = datosArchivo[1];
+
+                                        <a href="@rutaArchivo" target="_blank" class="btn btn-outline-primary btn-sm mb-2 w-100 fw-bold shadow-sm" title="@nombreOriginal">
+                                            <i class="bi bi-file-earmark-text me-1"></i> ABRIR: @(nombreOriginal.Length > 20 ? nombreOriginal.Substring(0, 17) + "..." : nombreOriginal)
+                                        </a>
+                                    }
+                                }
+                            }
+                        }
+
+                        <div class="mt-2 d-flex justify-content-center gap-1 flex-wrap">
+                            <a asp-action="Firmar" asp-route-id="@evento.Id" class="btn btn-success btn-sm shadow-sm fw-bold">ENTERADO</a>
+                            <a asp-action="ReporteFirmas" asp-route-id="@evento.Id" class="btn btn-info btn-sm text-white shadow-sm fw-bold">VER FIRMAS</a>
+
+                            @if (evento.Creador == User.Identity?.Name || User.IsInRole("Administrador"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@evento.Id" class="btn btn-warning btn-sm shadow-sm fw-bold text-dark">EDITAR</a>
+                                <a asp-action="Delete" asp-route-id="@evento.Id" class="btn btn-danger btn-sm shadow-sm fw-bold">BORRAR</a>
                             }
                         </div>
                     </div>
                 </div>
             </div>
         }
-    </div>
+    </div> <div class="d-flex justify-content-center align-items-center mt-4 mb-5 gap-2">
+    @if (ViewBag.PaginaActual > 1)
+    {
+        <a asp-action="Index" asp-route-pagina="@(ViewBag.PaginaActual - 1)" class="btn btn-outline-primary fw-bold shadow-sm">
+            <i class="bi bi-chevron-left"></i> Anterior
+        </a>
+    }
+
+    <span class="btn btn-primary disabled fw-bold shadow-sm">
+        Página @ViewBag.PaginaActual de @(ViewBag.TotalPaginas == 0 ? 1 : ViewBag.TotalPaginas)
+    </span>
+
+    @if (ViewBag.PaginaActual < ViewBag.TotalPaginas)
+    {
+        <a asp-action="Index" asp-route-pagina="@(ViewBag.PaginaActual + 1)" class="btn btn-outline-primary fw-bold shadow-sm">
+            Siguiente <i class="bi bi-chevron-right"></i>
+        </a>
+    }
+</div>
 </div>

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WestBesternoficialya.Controllers;
 
-[Authorize(Roles = "Administrador")]
+[Authorize(Roles = "Administrador,Administracion")]
 public class DepartamentosController : Controller
 {
     private readonly ApplicationDbContext _context;

@@ -6,17 +6,13 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
 
-    // Aquí registramos las tablas que definimos antes
+    // ==========================================
+    // TABLAS PRINCIPALES DEL ERP (LIMPIAS)
+    // ==========================================
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Departamento> Departamentos { get; set; }
     public DbSet<Evento> Eventos { get; set; }
     public DbSet<AcuseRecibo> AcusesRecibo { get; set; }
-    public DbSet<Habitacion> Habitaciones { get; set; }
-    public DbSet<Incidencia> Incidencias { get; set; }
     public DbSet<Producto> Inventario { get; set; }
-    public DbSet<Reservacion> Reservaciones { get; set; }
-    public DbSet<FormatoReservacion> FormatosReservacion { get; set; }
-    public DbSet<NotificacionEvento> NotificacionesEventos { get; set; }
-    public DbSet<Memorandum> Memorandums { get; set; }
     public DbSet<MaterialMantenimiento> MaterialesMantenimiento { get; set; }
 }

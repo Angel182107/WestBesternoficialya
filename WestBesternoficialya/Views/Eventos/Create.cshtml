@@ -4,7 +4,7 @@
     <div class="card shadow-lg border-0 rounded-3" style="max-width: 600px; margin: auto;">
 
         <div class="card-header bg-primary text-white text-center py-3">
-            <h3 class="mb-0"><i class="bi bi-file-earmark-excel-fill"></i> Publicar Aviso con Excel</h3>
+            <h3 class="mb-0"><i class="bi bi-folder-plus"></i> Publicar Nuevo Aviso</h3>
         </div>
 
         <div class="card-body p-4 bg-light">
@@ -12,16 +12,21 @@
 
                 <div class="mb-4">
                     <label asp-for="Titulo" class="form-label fw-bold text-secondary">Título del Aviso / Grupo <span class="text-danger">*</span></label>
-                    <input asp-for="Titulo" class="form-control form-control-lg border-primary shadow-sm" placeholder="Ej. Instructivo Grupo Reservamar" required />
+                    <input asp-for="Titulo" class="form-control form-control-lg border-primary shadow-sm" placeholder="Ej. Instructivo Grupo" required />
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label fw-bold text-dark">Formato de Excel del Hotel</label>
+                    <label asp-for="DetallesLogistica" class="form-label fw-bold text-secondary">Detalles del Aviso (Opcional)</label>
+                    <textarea asp-for="DetallesLogistica" class="form-control form-control-lg border-primary shadow-sm" rows="4" placeholder="Escribe aquí los detalles, instrucciones o mensaje del aviso..."></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-dark">Adjuntar Archivos (Opcional)</label>
                     <div id="drop-zone" class="border border-2 rounded-3 p-5 text-center bg-white position-relative" style="cursor: pointer; border-style: dashed !important; border-color: #0d6efd !important;">
                         <i class="bi bi-cloud-arrow-up-fill text-primary" style="font-size: 3.5rem;"></i>
-                        <p class="mt-2 fw-bold text-secondary" id="file-name-text">Arrastra tu archivo Excel aquí o haz clic para buscarlo</p>
+                        <p class="mt-2 fw-bold text-secondary" id="file-name-text">Arrastra tus archivos aquí o haz clic para buscarlos</p>
 
-                        <input type="file" name="archivoExcel" id="archivoExcel" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" accept=".xlsx, .xls, .csv" required style="cursor: pointer;" />
+                        <input type="file" name="archivosSubidos" id="archivosSubidos" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" accept=".xlsx, .xls, .csv, .doc, .docx, .pdf, .jpg, .png, .zip" multiple style="cursor: pointer;" />
                     </div>
                 </div>
 
@@ -40,15 +45,23 @@
 
 @section Scripts {
     <script>
-        // Efecto visual para cambiar el texto cuando seleccionan un archivo
-        const fileInput = document.getElementById('archivoExcel');
+        // Efecto visual para cambiar el texto cuando seleccionan archivos
+        const fileInput = document.getElementById('archivosSubidos');
         const fileNameText = document.getElementById('file-name-text');
         const dropZone = document.getElementById('drop-zone');
 
         fileInput.addEventListener('change', function() {
             if (fileInput.files.length > 0) {
-                fileNameText.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-file-earmark-check-fill"></i> ${fileInput.files[0].name}</span>`;
+                // Si es solo 1 archivo, muestra el nombre. Si son varios, muestra la cantidad.
+                if (fileInput.files.length === 1) {
+                    fileNameText.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-file-earmark-check-fill"></i> ${fileInput.files[0].name}</span>`;
+                } else {
+                    fileNameText.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-collection-fill"></i> ${fileInput.files.length} archivos seleccionados</span>`;
+                }
                 dropZone.style.backgroundColor = "#e8f5e9"; // Cambia a fondo verde claro
+            } else {
+                fileNameText.innerHTML = "Arrastra tus archivos aquí o haz clic para buscarlos";
+                dropZone.style.backgroundColor = "white"; // Regresa al blanco si cancelan
             }
         });
     </script>

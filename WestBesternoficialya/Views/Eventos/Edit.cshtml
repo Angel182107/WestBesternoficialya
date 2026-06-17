@@ -1,554 +1,95 @@
 ﻿@model WestBesternoficialya.Models.Evento
+
 @{
-    ViewData["Title"] = "Editar Formatos";
-    bool esInstructivoGrupo = !string.IsNullOrEmpty(Model.Grupo) || !string.IsNullOrEmpty(Model.Folio) || Model.Fecha != null;
-    var alimentos = ViewBag.Alimentos as WestBesternoficialya.Models.NotificacionEvento;
+    ViewData["Title"] = "Editar Aviso";
+
+    // 1. Magia para separar el texto de los archivos
+    string textoAviso = Model.DetallesLogistica ?? "";
+    string archivosAdjuntos = "";
+
+    if (textoAviso.Contains("===ARCHIVOS==="))
+    {
+        var partes = textoAviso.Split(new[] { "===ARCHIVOS===" }, StringSplitOptions.None);
+        textoAviso = partes[0];
+        if (partes.Length > 1) { archivosAdjuntos = partes[1]; }
+    }
+    else if (textoAviso.Contains("::"))
+    {
+        archivosAdjuntos = textoAviso; // Viejo formato (solo archivos)
+        textoAviso = "";
+    }
 }
 
 <div class="container mt-4 mb-5">
     <div class="mb-4 d-flex justify-content-between align-items-center">
-        <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Volver al Tablero</a>
-        <h3 class="text-primary fw-bold m-0">✏️ Editar Formatos</h3>
+        <a asp-action="Index" class="btn btn-secondary shadow-sm"><i class="bi bi-arrow-left"></i> Volver al Tablero</a>
+        <h3 class="text-primary fw-bold m-0">✏️ Editar Aviso</h3>
     </div>
 
-    <!-- PESTAÑAS -->
-    <ul class="nav nav-tabs mb-4" id="formatosTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active fw-bold fs-5 text-dark" data-bs-toggle="tab" data-bs-target="#instructivo-panel" type="button" role="tab">
-                📄 1. Instructivo / Aviso
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link fw-bold fs-5 text-dark" data-bs-toggle="tab" data-bs-target="#alimentos-panel" type="button" role="tab">
-                🍽️ 2. Notificación de Evento
-            </button>
-        </li>
-        <!-- NUEVA PESTAÑA: MEMORÁNDUM -->
-        <li class="nav-item" role="presentation">
-            <button class="nav-link fw-bold fs-5 text-dark" data-bs-toggle="tab" data-bs-target="#memorandum-panel" type="button" role="tab">
-                📝 3. Memorándum
-            </button>
-        </li>
-    </ul>
+    <div class="card shadow-lg border-primary border-0 rounded-3" style="max-width: 600px; margin: auto;">
+        <div class="card-header bg-primary text-white text-center py-3">
+            <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i> Modificar Información</h4>
+        </div>
 
-    <div class="tab-content">
-        <!-- ****************************************** -->
-        <!-- ARCHIVO 1: AVISO O INSTRUCTIVO -->
-        <!-- ****************************************** -->
-        <div class="tab-pane fade show active" id="instructivo-panel" role="tabpanel">
-            <form asp-action="Edit" asp-controller="Eventos" method="post" id="formEdicionEvento">
+        <div class="card-body p-4 bg-light">
+            <form asp-action="Edit" asp-controller="Eventos" method="post" id="formEditEvento">
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="FechaCreacion" />
                 <input type="hidden" asp-for="Creador" />
 
-                <!-- ¡SOLUCIÓN 2! Este bloque del Aviso General ahora se muestra SIEMPRE -->
-                <div class="card shadow border-primary mb-4">
-                    <div class="card-header bg-primary text-white"><h4 class="mb-0">Editar Aviso General</h4></div>
-                    <div class="card-body p-4">
-                        <h5 class="text-primary mb-2"><i class="bi bi-megaphone"></i> Título del Aviso</h5>
-                        <input asp-for="Titulo" class="form-control border-primary mb-4" required />
+                <!-- 2. Aquí viaja el resultado final al servidor -->
+                <input type="hidden" asp-for="DetallesLogistica" id="DetallesLogisticaFinal" />
 
-                        <h5 class="text-primary mb-2">Comunicado / Detalles</h5>
-                        <textarea asp-for="DetallesLogistica" class="form-control border-primary" rows="6"></textarea>
-                    </div>
+                <!-- 3. Aquí escondemos los archivos para no perderlos -->
+                <input type="hidden" id="ArchivosOcultos" value="@archivosAdjuntos" />
+
+                <div class="mb-4">
+                    <label asp-for="Titulo" class="form-label fw-bold text-primary">Título del Aviso / Grupo <span class="text-danger">*</span></label>
+                    <input asp-for="Titulo" class="form-control form-control-lg border-primary shadow-sm" required />
                 </div>
 
-                @if (esInstructivoGrupo)
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-primary">Detalles del Aviso (Opcional)</label>
+                    <textarea id="TextoUsuario" class="form-control border-primary shadow-sm" rows="6" placeholder="Modifica aquí las instrucciones del aviso...">@textoAviso</textarea>
+                </div>
+
+                @if (!string.IsNullOrEmpty(archivosAdjuntos))
                 {
-                    <div class="formato-impresion shadow-sm" style="max-width: 1000px; margin: auto; background-color: white; padding: 30px; border: 1px solid #ccc; font-family: Arial, sans-serif;">
-                        <div class="p-3 mb-3 border border-dark" style="background-color: #e2e3e5;">
-                            <h2 class="text-center fw-bold mb-3" style="letter-spacing: 2px;">HOTEL SAN PEDRO</h2>
-                            <div class="d-flex justify-content-between fw-bold fs-5 align-items-center">
-                                <div>INSTRUCTIVO DE GRUPO</div>
-                                <div class="d-flex align-items-center">FOLIO <input asp-for="Folio" class="form-control form-control-sm ms-2 w-auto border-dark" /></div>
-                            </div>
-                        </div>
-
-                        <table class="table table-bordered border-dark mt-0" style="font-size: 0.9rem;">
-                            <tr>
-                                <td style="width: 15%;" class="bg-light"><strong>Fecha:</strong></td>
-                                <td style="width: 35%;"><input asp-for="Fecha" type="date" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                                <td style="width: 15%;" class="bg-light"><strong>Grupo:</strong></td>
-                                <td style="width: 35%;"><input asp-for="Grupo" class="form-control form-control-sm border-0 bg-transparent fw-bold text-uppercase w-100" /></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light"><strong>Agencia:</strong></td>
-                                <td><input asp-for="Agencia" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                                <td class="bg-light"><strong>Tipo Grupo:</strong></td>
-                                <td><input asp-for="TipoGrupo" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light"><strong>Dirección:</strong></td>
-                                <td><input asp-for="Direccion" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                                <td class="bg-light"><strong>Teléfono:</strong></td>
-                                <td><input asp-for="Telefono" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light"><strong>Coordinador:</strong></td>
-                                <td><input asp-for="Coordinador" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                                <td class="bg-light"><strong>R.F.C.:</strong></td>
-                                <td><input asp-for="Rfc" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light"><strong>Ejecutivo:</strong></td>
-                                <td><input asp-for="Ejecutivo" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                                <td class="bg-light"><strong>Ant:</strong></td>
-                                <td><input asp-for="Ant" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light"><strong>Fecha Entrada:</strong></td>
-                                <td><input asp-for="FechaEntrada" type="date" class="form-control form-control-sm border-0 bg-transparent fw-bold w-100" /></td>
-                                <td class="bg-light"><strong>Fecha Salida:</strong></td>
-                                <td><input asp-for="FechaSalida" type="date" class="form-control form-control-sm border-0 bg-transparent fw-bold w-100" /></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"></td>
-                                <td class="bg-light"><strong>Hora Llegada:</strong></td>
-                                <td><input asp-for="HoraLlegada" type="time" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                            </tr>
-                        </table>
-
-                        <table class="table table-bordered border-dark text-center mb-0" style="font-size: 0.85rem;">
-                            <thead class="bg-light">
-                                <tr class="align-middle">
-                                    <th style="width: 15%;"></th>
-                                    <th style="width: 15%;">TARIFAS</th>
-                                    <th style="width: 14%;">N° DE HAB</th>
-                                    <th style="width: 10%;"></th>
-                                    <th style="width: 10%;">NOCHES</th>
-                                    <th style="width: 20%;">TOTAL (Finanzas)</th>
-                                    <th style="width: 16%;">PROPINA</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- ¡SOLUCIÓN 1! Aquí está el asp-format="{0:0.00}" en las tarifas para limitar los ceros -->
-                                <tr>
-                                    <td class="text-center fw-bold">SENCILLA</td>
-                                    <td><input asp-for="TarifaSencilla" asp-format="{0:0.00}" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="Sencillas" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td></td>
-                                    <td><input asp-for="NochesSencilla" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="CostoHospedaje" asp-format="{0:0.00}" placeholder="Costo Hospedaje" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="PropinaSencilla" class="form-control form-control-sm border-0 text-center" /></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center fw-bold">DOBLE</td>
-                                    <td><input asp-for="TarifaDoble" asp-format="{0:0.00}" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="Dobles" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td></td>
-                                    <td><input asp-for="NochesDoble" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="CostoAlimentos" asp-format="{0:0.00}" placeholder="Costo Alimentos" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="PropinaDoble" class="form-control form-control-sm border-0 text-center" /></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center fw-bold">TRIPLE</td>
-                                    <td><input asp-for="TarifaTriple" asp-format="{0:0.00}" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="Triples" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td></td>
-                                    <td><input asp-for="NochesTriple" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="CostoPropinas" asp-format="{0:0.00}" placeholder="Costo Propinas" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="PropinaTriple" class="form-control form-control-sm border-0 text-center" /></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center fw-bold">CUÁDRUPLE</td>
-                                    <td><input asp-for="TarifaCuadruple" asp-format="{0:0.00}" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="Cuadruples" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td></td>
-                                    <td><input asp-for="NochesCuadruple" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td class="bg-light border-dark"><strong>TOTAL EVENTO:</strong></td>
-                                    <td><input asp-for="PropinaCuadruple" class="form-control form-control-sm border-0 text-center" /></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center fw-bold">CORTESÍA</td>
-                                    <td><input asp-for="TarifaCortesia" asp-format="{0:0.00}" type="number" step="0.01" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td><input asp-for="CortesiasHabitacion" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td></td>
-                                    <td><input asp-for="NochesCortesia" type="number" class="form-control form-control-sm border-0 text-center" /></td>
-                                    <td class="border-dark"><input asp-for="TotalEvento" asp-format="{0:0.00}" class="form-control form-control-sm border-0 text-center fw-bold" /></td>
-                                    <td><input asp-for="PropinaCortesia" class="form-control form-control-sm border-0 text-center" /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered border-dark mt-3" style="font-size: 0.9rem;">
-                            <tr class="bg-light">
-                                <td colspan="2" class="fw-bold d-flex align-items-center">NO. DE RESERVACIÓN: <input asp-for="NumeroReservacion" class="form-control form-control-sm ms-2 w-auto border-dark" /></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 25%;" class="bg-light"><strong>Cta. Maestra:</strong></td>
-                                <td><input asp-for="CuentaMaestra" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                            </tr>
-                            <tr>
-                                <td class="bg-light"><strong>Cta. Individual:</strong></td>
-                                <td><input asp-for="CuentasIndividuales" class="form-control form-control-sm border-0 bg-transparent w-100" /></td>
-                            </tr>
-                        </table>
-
-                        <table class="table table-bordered border-dark mb-0" style="font-size: 0.85rem;">
-                            <tr>
-                                <td style="width: 20%; vertical-align: top;" class="bg-white">
-                                    <strong class="bg-light px-2 py-1 border border-dark d-inline-block mb-2">OBSERVACIONES:</strong><br />
-                                </td>
-                                <td style="width: 80%; background-color: #cfe2ff;" class="p-2">
-                                    <textarea asp-for="Observaciones" class="form-control border-0 bg-transparent fw-bold" rows="3" style="color: #084298;"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <table class="table table-bordered border-dark mt-0 border-top-0" style="font-size: 0.85rem;">
-                            <tr><td style="width: 20%;" class="bg-light border-top-0"><strong>CORTESÍAS:</strong></td><td class="border-top-0"><input asp-for="CortesiasExtras" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                            <tr><td class="bg-light"><strong>ANTICIPO:</strong></td><td><input asp-for="Anticipo" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                            <tr><td class="bg-light"><strong>FACTURAR A:</strong></td><td><input asp-for="FacturarA" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                            <tr><td class="bg-light"><strong>DOMICILIO:</strong></td><td><input asp-for="DomicilioFacturacion" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                            <tr><td class="bg-light"><strong>R.F.C.:</strong></td><td><input asp-for="RfcFacturacion" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                            <tr><td class="bg-light"><strong>TELÉFONO FACT.:</strong></td><td><input asp-for="TelefonoFacturacion" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                            <tr><td class="bg-light"><strong>TELÉFONO GUÍA:</strong></td><td><input asp-for="Guia" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                            <tr><td class="bg-light"><strong>DESPERTADOR:</strong></td><td><input asp-for="Despertador" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                            <tr><td class="bg-light"><strong>ALIMENTOS (Notas):</strong></td><td><input asp-for="NotasAlimentos" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                            <tr><td class="bg-light"><strong>EQUIPAJE:</strong></td><td><input asp-for="Equipaje" class="form-control form-control-sm border-0 w-100" /></td></tr>
-                        </table>
+                    <div class="alert alert-info shadow-sm rounded-3">
+                        <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                        <strong>Archivos protegidos:</strong> Este aviso contiene documentos. Puedes editar el título y el texto libremente, pero si necesitas cambiar o subir nuevos archivos, deberás borrar este aviso y crear uno nuevo.
                     </div>
                 }
 
-                <div class="mt-4 text-center">
-                    <button type="submit" class="btn btn-primary btn-lg shadow-sm"><i class="bi bi-save"></i> Guardar Cambios (Pestaña 1)</button>
+                <hr class="mt-4 mb-4" />
+
+                <div class="text-center d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 shadow-sm">Cancelar</a>
+                    <button type="submit" class="btn btn-success btn-lg px-4 shadow-sm fw-bold">
+                        <i class="bi bi-save"></i> Guardar Cambios
+                    </button>
                 </div>
             </form>
-        </div>
-
-        <!-- ****************************************** -->
-        <!-- ARCHIVO 2: NOTIFICACIÓN (ALIMENTOS) -->
-        <!-- ****************************************** -->
-        <div class="tab-pane fade" id="alimentos-panel" role="tabpanel">
-            @if (alimentos != null)
-            {
-                <form asp-action="Edit" asp-controller="NotificacionesEventos" method="post">
-                    <input type="hidden" name="Id" value="@alimentos.Id" />
-                    <input type="hidden" name="EventoId" value="@alimentos.EventoId" />
-
-                    <div class="formato-impresion shadow-sm" style="max-width: 1000px; margin: auto; background-color: white; padding: 30px; border: 1px solid #ccc; font-family: Arial, sans-serif;">
-                        <div class="text-center fw-bold border border-dark p-2 mb-0 d-flex justify-content-center align-items-center" style="background-color: #d1d1d1;">
-                            NOTIFICACIÓN DE EVENTO FOLIO <input name="Folio" value="@alimentos.Folio" class="form-control form-control-sm ms-2 w-auto border-dark text-center bg-white" />
-                        </div>
-
-                        <table class="table table-bordered border-dark text-center mt-0 mb-0" style="font-size: 0.9rem;">
-                            <tbody>
-                                <tr>
-                                    <td style="width: 50%;">@(Model.FechaCreacion.ToString("dd/MM/yyyy"))</td>
-                                    <td style="width: 50%;" class="fw-bold bg-light">FECHA DE EVENTO:</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold bg-light">CLIENTE Y/O EMPRESA:</td>
-                                    <td class="p-0"><input name="FechaEvento" value="@alimentos.FechaEvento" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0"><input name="ClienteEmpresa" value="@alimentos.ClienteEmpresa" class="form-control border-0 fw-bold fs-5 text-center text-uppercase bg-transparent w-100" /></td>
-                                    <td class="p-0">
-                                        <table class="table table-borderless m-0 h-100 w-100">
-                                            <tr>
-                                                <td style="width: 30%; border-right: 1px solid black;" class="fw-bold bg-light align-middle">EJECUTIVO:</td>
-                                                <td class="p-0 align-middle"><input name="Ejecutivo" value="@alimentos.Ejecutivo" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered border-dark text-center mt-3 mb-0" style="font-size: 0.9rem;">
-                            <tbody>
-                                <tr>
-                                    <td style="width: 50%;" class="fw-bold bg-light">HORARIO:</td>
-                                    <td style="width: 50%;"></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0"><input name="ConceptoServicio" type="text" value="@alimentos.ConceptoServicio" class="form-control border-0 fw-bold fs-5 text-center bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="Horario" type="time" value="@alimentos.Horario" class="form-control border-0 text-center fw-bold bg-transparent w-100" /></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold bg-light">LUGAR:</td>
-                                    <td class="fw-bold bg-light">MONTAJE:</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0"><input name="Lugar" value="@alimentos.Lugar" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="Montaje" value="@alimentos.Montaje" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <div class="fw-bold text-center border border-dark border-bottom-0 mt-3" style="background-color: #d1d1d1;">COSTOS:</div>
-                        <table class="table table-bordered border-dark text-center mb-0" style="font-size: 0.85rem;">
-                            <thead style="background-color: #ffff00;">
-                                <tr>
-                                    <th style="width: 15%;" class="bg-light">CONCEPTO:</th>
-                                    <th style="width: 17%;"></th>
-                                    <th style="width: 17%;"></th>
-                                    <th style="width: 17%;"></th>
-                                    <th style="width: 17%;"></th>
-                                    <th style="width: 17%;"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="fw-bold bg-light align-middle">PRECIO:</td>
-                                    <td class="p-0"><input name="Precio" type="number" step="0.01" value="@alimentos.Precio" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold bg-light align-middle">IVA:</td>
-                                    <td class="p-0"><input name="Iva" type="number" step="0.01" value="@alimentos.Iva" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold bg-light align-middle">SERVICIO:</td>
-                                    <td class="p-0"><input name="Servicio" type="number" step="0.01" value="@alimentos.Servicio" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold bg-light align-middle">SUBTOTAL:</td>
-                                    <td class="p-0"><input name="Subtotal" type="number" step="0.01" value="@alimentos.Subtotal" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold bg-light align-middle">NO. PAX:</td>
-                                    <td class="p-0"><input name="NoPax" type="number" value="@alimentos.NoPax" class="form-control border-0 text-center fw-bold bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="NoPax2" type="number" class="form-control border-0 text-center fw-bold bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="NoPax3" type="number" class="form-control border-0 text-center fw-bold bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="NoPax4" type="number" class="form-control border-0 text-center fw-bold bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="NoPax5" type="number" class="form-control border-0 text-center fw-bold bg-transparent w-100" /></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold bg-light align-middle">NO. DÍAS:</td>
-                                    <td class="p-0"><input name="NoDias" type="number" value="@alimentos.NoDias" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="NoDias2" type="number" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="NoDias3" type="number" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="NoDias4" type="number" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                    <td class="p-0"><input name="NoDias5" type="number" class="form-control border-0 text-center bg-transparent w-100" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="fw-bold bg-light text-end pe-3 align-middle">TOTAL:</td>
-                                    <td class="p-0"><input name="Total" type="number" step="0.01" value="@alimentos.Total" class="form-control border-0 text-center fw-bold fs-6 bg-transparent w-100" /></td>
-                                    <td colspan="3" class="fw-bold fs-6"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <!-- PRIMERA TABLA CORREGIDA (Cortesías, Pago, Notas Izquierda y Observaciones Derecha) -->
-                        <table class="table table-bordered border-dark text-center mt-0 mb-0 border-top-0" style="font-size: 0.9rem;">
-                            <tbody>
-                                <tr>
-                                    <td style="width: 50%;" class="fw-bold bg-light">CORTESÍAS:</td>
-                                    <td style="width: 50%;" class="fw-bold bg-light">PAGO:</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0"><textarea name="Cortesias" class="form-control border-0 text-center fw-bold text-uppercase bg-transparent w-100" rows="2">@alimentos.Cortesias</textarea></td>
-                                    <td class="p-0"><input name="Pago" value="@alimentos.Pago" class="form-control border-0 text-center fw-bold text-decoration-underline mt-2 bg-transparent w-100" /></td>
-                                </tr>
-                                <tr>
-                                    <td rowspan="2" class="p-0 align-middle">
-                                        <textarea name="NotasAdicionales" class="form-control border-0 text-center fw-bold bg-transparent w-100 h-100" rows="3" style="color: black;">@alimentos.NotasAdicionales</textarea>
-                                    </td>
-                                    <td class="fw-bold bg-light text-start ps-3 border-bottom-0">OBSERVACIONES:</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-0 border-top-0" style="background-color: #ffff00;">
-                                        <textarea name="Observaciones" class="form-control border-0 text-center fw-bold fs-5 text-uppercase w-100" rows="2" style="background-color: transparent !important; color: black;">@alimentos.Observaciones</textarea>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <!-- SEGUNDA TABLA CORREGIDA (Estacionamiento, Preparar, Garantía y Menús) -->
-                        <table class="table table-bordered border-dark text-center mt-0 mb-0 border-top-0" style="font-size: 0.9rem;">
-                            <tbody>
-                                <tr>
-                                    <td class="fw-bold bg-light align-middle" style="width: 50%;">
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            ESTACIONAMIENTO:
-                                            <input name="Estacionamiento" value="@alimentos.Estacionamiento" class="form-control border-0 bg-transparent ms-2 w-50 fw-bold" placeholder="..." />
-                                        </div>
-                                    </td>
-                                    <td class="p-0" style="width: 50%;">
-                                        <table class="table table-borderless m-0 h-100 w-100">
-                                            <tr>
-                                                <td class="fw-bold bg-light border-bottom border-end border-dark" style="width: 50%;">PREPARAR:</td>
-                                                <td class="p-0 border-bottom border-dark" style="width: 50%;">
-                                                    <input name="Preparar" type="number" value="@alimentos.Preparar" class="form-control border-0 text-center fw-bold h-100 bg-transparent w-100" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="fw-bold bg-light border-end border-dark">GARANTÍA:</td>
-                                                <td class="p-0">
-                                                    <input name="Garantia" type="number" value="@alimentos.Garantia" class="form-control border-0 text-center fw-bold h-100 bg-transparent w-100" />
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="fw-bold bg-light fs-6 text-start ps-3">MENÚS:</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="p-0">
-                                        <textarea name="Menus" class="form-control border-0 text-center fw-bold text-uppercase bg-transparent w-100" rows="4">@alimentos.Menus</textarea>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-4 text-center">
-                        <button type="submit" class="btn btn-success btn-lg shadow-sm"><i class="bi bi-save"></i> Guardar Cambios (Pestaña 2)</button>
-                    </div>
-                </form>
-            }
-            else
-            {
-                <div class="alert alert-warning text-center shadow-sm p-5 mt-4 rounded-4">
-                    <h4><i class="bi bi-exclamation-triangle text-warning"></i> Archivo No Encontrado</h4>
-                    <p class="fs-5">Este grupo aún no tiene una Notificación de Evento registrada.</p>
-                    <a asp-controller="NotificacionesEventos" asp-action="Create" asp-route-eventoId="@Model.Id" class="btn btn-success fw-bold px-4 shadow mt-3">
-                        <i class="bi bi-file-earmark-plus"></i> Crear Nuevo Archivo
-                    </a>
-                </div>
-            }
-        </div>
-
-        <!-- ****************************************** -->
-        <!-- ARCHIVO 3: MEMORÁNDUM (NUEVO)              -->
-        <!-- ****************************************** -->
-        <div class="tab-pane fade" id="memorandum-panel" role="tabpanel">
-            <div class="formato-impresion shadow-sm" style="max-width: 800px; margin: auto; background-color: white; padding: 40px; border: 1px solid #ccc; font-family: Arial, sans-serif;">
-
-                <!-- Campos ocultos usando form="formEdicionEvento" para que se envíen con la Pestaña 1 -->
-                <input type="hidden" form="formEdicionEvento" asp-for="Memorandum.Id" />
-                <input type="hidden" form="formEdicionEvento" asp-for="Memorandum.EventoId" />
-
-                <h3 class="text-center fw-bold mb-4" style="letter-spacing: 5px;">M E M O R A N D U M</h3>
-
-                <table class="table table-borderless mb-4" style="line-height: 1.2;">
-                    <tr><td style="width: 80px;" class="fw-bold p-1">Para:</td><td class="p-1"><input form="formEdicionEvento" asp-for="Memorandum.Para" class="form-control form-control-sm border-0 bg-light w-100" /></td></tr>
-                    <tr><td class="fw-bold p-1">De:</td><td class="p-1"><input form="formEdicionEvento" asp-for="Memorandum.De" class="form-control form-control-sm border-0 bg-light w-100" /></td></tr>
-                    <tr><td class="fw-bold p-1">Fecha:</td><td class="p-1"><input form="formEdicionEvento" asp-for="Memorandum.FechaMemorandum" type="date" class="form-control form-control-sm border-0 bg-light w-100" /></td></tr>
-                    <tr><td class="fw-bold p-1">Asunto:</td><td class="p-1"><input form="formEdicionEvento" asp-for="Memorandum.Asunto" class="form-control form-control-sm border-0 bg-light w-100 fw-bold" /></td></tr>
-                </table>
-
-                <div class="mb-4">
-                    <textarea form="formEdicionEvento" asp-for="Memorandum.Saludo" class="form-control border-0 bg-light w-100 text-justify" rows="3" style="font-size: 0.95rem;"></textarea>
-                </div>
-
-                <table class="table table-borderless mb-4 fw-bold" style="line-height: 1.2;">
-                    <tr><td style="width: 80px;" class="p-1">IN:</td><td class="p-1"><input form="formEdicionEvento" asp-for="Memorandum.CheckIn" type="date" class="form-control form-control-sm border-0 bg-light w-50" /></td></tr>
-                    <tr><td class="p-1">OUT:</td><td class="p-1"><input form="formEdicionEvento" asp-for="Memorandum.CheckOut" type="date" class="form-control form-control-sm border-0 bg-light w-50" /></td></tr>
-                    <tr><td class="p-1">GARANTIA:</td><td class="p-1"><input form="formEdicionEvento" asp-for="Memorandum.Garantia" class="form-control form-control-sm border-0 bg-light w-100" /></td></tr>
-                    <tr><td class="p-1 pt-3">Nombre:</td><td class="p-1 pt-3"><input form="formEdicionEvento" asp-for="Memorandum.NombreHuesped" class="form-control form-control-sm border-0 bg-light w-100" /></td></tr>
-                </table>
-
-                <table class="table table-bordered border-dark text-center align-middle mb-3" style="font-size: 0.85rem;">
-                    <thead class="fw-bold bg-light">
-                        <tr>
-                            <th style="width: 30%; padding: 5px;">TIPO DE HABITACION</th>
-                            <th style="width: 15%; padding: 5px;">CANTIDAD</th>
-                            <th style="width: 15%; padding: 5px;">NOCHES</th>
-                            <th style="width: 20%; padding: 5px;">COSTO</th>
-                            <th style="width: 20%; padding: 5px;">TOTAL</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 1; i <= 4; i++)
-                        {
-                            <tr>
-                                <td class="p-1"><input form="formEdicionEvento" name="Memorandum.Concepto@(i)" value="@(typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Concepto" + i)?.GetValue(Model.Memorandum))" class="form-control form-control-sm border-0 bg-transparent text-center fw-bold" /></td>
-                                <td class="p-1"><input form="formEdicionEvento" name="Memorandum.Cantidad@(i)" id="mCant@(i)" value="@(typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Cantidad" + i)?.GetValue(Model.Memorandum))" class="form-control form-control-sm border-0 bg-transparent text-center memo-calc" /></td>
-                                <td class="p-1"><input form="formEdicionEvento" name="Memorandum.Noches@(i)" id="mNoc@(i)" value="@(typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Noches" + i)?.GetValue(Model.Memorandum))" class="form-control form-control-sm border-0 bg-transparent text-center memo-calc" /></td>
-                                <td class="p-1"><input form="formEdicionEvento" name="Memorandum.Costo@(i)" id="mCos@(i)" type="number" step="0.01" value="@(typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Costo" + i)?.GetValue(Model.Memorandum))" class="form-control form-control-sm border-0 bg-transparent text-center memo-calc" /></td>
-                                <td class="p-1"><input form="formEdicionEvento" name="Memorandum.Total@(i)" id="mTot@(i)" type="number" step="0.01" value="@(typeof(WestBesternoficialya.Models.Memorandum).GetProperty("Total" + i)?.GetValue(Model.Memorandum))" class="form-control form-control-sm border-0 bg-transparent text-center" readonly /></td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-                <div class="text-end fw-bold mb-5 fs-5 d-flex justify-content-end align-items-center">
-                    TOTAL $<input form="formEdicionEvento" asp-for="Memorandum.GranTotal" id="mGranTotal" class="form-control form-control-sm border-0 bg-transparent fw-bold text-end w-25 ms-2 fs-5" readonly />
-                </div>
-
-                <div class="mb-5" style="font-size: 0.9rem;">
-                    <div class="d-flex mb-3 align-items-start"><span class="fw-bold me-2">RECEPCION:</span> <input form="formEdicionEvento" asp-for="Memorandum.InstruccionesRecepcion" class="form-control form-control-sm border-0 bg-light flex-grow-1" /></div>
-                    <div class="d-flex mb-3 align-items-start"><span class="fw-bold me-2">RESTAURANTE:</span> <textarea form="formEdicionEvento" asp-for="Memorandum.InstruccionesRestaurante" class="form-control form-control-sm border-0 bg-light flex-grow-1" rows="2"></textarea></div>
-                    <div class="d-flex mb-3 align-items-start"><span class="fw-bold me-2">AMA DE LLAVES/MTTO:</span> <input form="formEdicionEvento" asp-for="Memorandum.InstruccionesAmaLlaves" class="form-control form-control-sm border-0 bg-light flex-grow-1" /></div>
-                </div>
-
-                <div class="text-center fw-bold mt-4">
-                    <input form="formEdicionEvento" asp-for="Memorandum.NotaFinal" class="form-control form-control-sm border-0 bg-light text-center w-100" />
-                </div>
-            </div>
-
-            <div class="mt-4 text-center">
-                <!-- Este botón activa el guardado de la Pestaña 1 y la Pestaña 3 juntas -->
-                <button form="formEdicionEvento" type="submit" class="btn btn-primary btn-lg shadow-sm"><i class="bi bi-save"></i> Guardar Cambios (Memorándum)</button>
-            </div>
         </div>
     </div>
 </div>
 
-<style>
-    .bg-light {
-        background-color: #f8f9fa !important;
-    }
-
-    input.border-0, textarea.border-0 {
-        background-color: #fcfcfc !important;
-        outline: none;
-    }
-
-        input.border-0:focus, textarea.border-0:focus {
-            background-color: #e9ecef !important;
-        }
-</style>
-
 @section Scripts {
     <script>
-        function extraerNumero(texto) {
-            if (!texto) return 0;
-            let match = texto.match(/\d+(\.\d+)?/);
-            return match ? parseFloat(match[0]) : 0;
-        }
+        // 4. Antes de enviar el formulario, volvemos a pegar todo
+        document.getElementById('formEditEvento').addEventListener('submit', function (e) {
+            let texto = document.getElementById('TextoUsuario').value;
+            let archivos = document.getElementById('ArchivosOcultos').value;
 
-        // Matemáticas automáticas solo para la tabla del Memorándum
-        document.querySelectorAll('.memo-calc').forEach(input => {
-            input.addEventListener('input', function() {
-                let granTotalMemo = 0;
-                for(let i = 1; i <= 4; i++) {
-                    let cantTexto = document.getElementById('mCant'+i).value;
-                    let nocTexto = document.getElementById('mNoc'+i).value;
+            let resultadoFinal = texto;
 
-                    let cant = extraerNumero(cantTexto);
-                    let noc = extraerNumero(nocTexto);
-                    let cos = parseFloat(document.getElementById('mCos'+i).value) || 0;
+            // Si hay archivos, le pegamos el separador mágico
+            if (archivos !== "") {
+                resultadoFinal = texto + "===ARCHIVOS===" + archivos;
+            }
 
-                    let multiplicadorNoches = noc;
-                    if (noc === 0 && nocTexto.trim() === "") {
-                        multiplicadorNoches = 1;
-                    }
-
-                    let totalFila = cant * multiplicadorNoches * cos;
-                    document.getElementById('mTot'+i).value = totalFila > 0 ? totalFila.toFixed(2) : '';
-                    granTotalMemo += totalFila;
-                }
-                document.getElementById('mGranTotal').value = granTotalMemo.toFixed(2);
-            });
+            // Metemos todo en el campo oculto que sí viaja a la Base de Datos
+            document.getElementById('DetallesLogisticaFinal').value = resultadoFinal;
         });
     </script>
 }

@@ -1,19 +1,78 @@
 ﻿@model WestBesternoficialya.Models.Evento
 
-<div class="container mt-4">
-    <h2 class="text-danger">¿Quitar este aviso del tablero?</h2>
-    <hr />
-    <div class="card border-danger mb-3" style="max-width: 30rem;">
-        <div class="card-header bg-danger text-white">Aviso: @Model.Titulo</div>
-        <div class="card-body">
-            <p><strong>Detalles:</strong> @Model.DetallesLogistica</p>
-            <p><strong>Fecha:</strong> @Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
-            <p class="text-muted small">Al borrar este evento, desaparecerá del tablero de todos los empleados.</p>
+@{
+    ViewData["Title"] = "Eliminar Aviso";
+
+    // Lógica para separar el texto de los archivos y contar cuántos hay
+    string textoAviso = "";
+    int cantidadArchivos = 0;
+
+    if (!string.IsNullOrEmpty(Model.DetallesLogistica))
+    {
+        if (Model.DetallesLogistica.Contains("===ARCHIVOS==="))
+        {
+            var partes = Model.DetallesLogistica.Split(new[] { "===ARCHIVOS===" }, StringSplitOptions.None);
+            textoAviso = partes[0];
+            if (partes.Length > 1 && !string.IsNullOrEmpty(partes[1]))
+            {
+                cantidadArchivos = partes[1].Split('|').Length;
+            }
+        }
+        else if (Model.DetallesLogistica.Contains("::"))
+        {
+            cantidadArchivos = Model.DetallesLogistica.Split('|').Length;
+        }
+        else
+        {
+            textoAviso = Model.DetallesLogistica;
+        }
+    }
+}
+
+<div class="container mt-4 mb-5">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <a asp-action="Index" class="btn btn-secondary shadow-sm"><i class="bi bi-arrow-left"></i> Volver al Tablero</a>
+    </div>
+
+    <div class="card shadow-lg border-danger border-0 rounded-3" style="max-width: 600px; margin: auto;">
+        <div class="card-header bg-danger text-white text-center py-3">
+            <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i> ¿Quitar este aviso del tablero?</h4>
+        </div>
+
+        <div class="card-body p-4 bg-light">
+            <h5 class="text-danger fw-bold mb-3">@Model.Titulo</h5>
+
+            @if (!string.IsNullOrWhiteSpace(textoAviso))
+            {
+                <div class="p-3 bg-white border rounded shadow-sm mb-3">
+                    <p class="text-secondary mb-0" style="white-space: pre-wrap;">@textoAviso</p>
+                </div>
+            }
+
+            @if (cantidadArchivos > 0)
+            {
+                <div class="alert alert-secondary mt-3 mb-3 p-2 text-center shadow-sm">
+                    <i class="bi bi-paperclip"></i> Este aviso contiene <strong>@cantidadArchivos archivo(s) adjunto(s)</strong> que también serán eliminados.
+                </div>
+            }
+
+            <hr class="text-muted" />
+            <div class="text-center text-muted small">
+                <p class="mb-1"><strong><i class="bi bi-calendar3"></i> Fecha de publicación:</strong> @Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
+                <p class="mb-0"><strong><i class="bi bi-person-circle"></i> Creado por:</strong> @(Model.Creador ?? "Administrador")</p>
+            </div>
+
+            <div class="alert alert-warning mt-4 text-center shadow-sm border-warning">
+                <i class="bi bi-exclamation-circle-fill"></i> Al borrar este aviso, desaparecerá definitivamente del tablero de todos los departamentos. <strong>Esta acción no se puede deshacer.</strong>
+            </div>
+
+            <form asp-action="Delete" method="post" class="mt-4 text-center d-flex justify-content-between">
+                <input type="hidden" asp-for="Id" />
+                <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4 shadow-sm fw-bold">Cancelar</a>
+                <button type="submit" class="btn btn-danger btn-lg px-4 shadow-sm fw-bold">
+                    <i class="bi bi-trash3-fill"></i> Sí, eliminar aviso
+                </button>
+            </form>
         </div>
     </div>
-    <form asp-action="Delete" method="post">
-        <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger">Sí, eliminar aviso</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-    </form>
 </div>
