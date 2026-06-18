@@ -1,0 +1,78 @@
+@model WestBesternoficialya.Models.ViewModels.PerfilViewModel
+
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<div class="container mt-4 mb-5">
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <strong>¡Éxito!</strong> @TempData["MensajeExito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-5 mb-4">
+            <div class="card border-0 shadow-lg text-center rounded-3 overflow-hidden">
+                <div class="bg-primary py-4 text-white">
+                    <i class="bi bi-person-badge-fill" style="font-size: 5rem;"></i>
+                    <h4 class="fw-bold mt-2 mb-0">@Model.NombreCompleto</h4>
+                    <span class="badge bg-light text-primary fw-bold text-uppercase mt-2 px-3 py-2 shadow-sm">
+                        <i class="bi bi-briefcase-fill me-1"></i> @Model.Departamento
+                    </span>
+                </div>
+                <div class="card-body bg-white p-4 text-center">
+                    <div class="mb-3">
+                        <label class="text-muted small fw-bold text-uppercase d-block">Correo Electrónico</label>
+                        <span class="text-dark fs-5 fw-semibold"><i class="bi bi-envelope me-2 text-secondary"></i>@Model.Email</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7 mb-4">
+            <div class="card border-0 shadow-lg rounded-3">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-shield-lock-fill me-2"></i> Seguridad de la Cuenta</h5>
+                </div>
+                <div class="card-body bg-light p-4">
+                    <h6 class="text-secondary mb-4">Actualiza tu contraseña periódicamente para mantener seguro el acceso al hotel.</h6>
+
+                    <form asp-action="CambiarPassword" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Contraseña Actual</label>
+                            <input asp-for="PasswordActual" class="form-control border-primary shadow-sm" placeholder="••••••••" />
+                            <span asp-validation-for="PasswordActual" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">Nueva Contraseña</label>
+                            <input asp-for="PasswordNueva" class="form-control border-primary shadow-sm" placeholder="Mínimo 6 caracteres" />
+                            <span asp-validation-for="PasswordNueva" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Confirmar Nueva Contraseña</label>
+                            <input asp-for="ConfirmarPassword" class="form-control border-primary shadow-sm" placeholder="Repite la nueva contraseña" />
+                            <span asp-validation-for="ConfirmarPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-success fw-bold shadow-sm px-4">
+                                <i class="bi bi-key-fill me-1"></i> Actualizar Contraseña
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
